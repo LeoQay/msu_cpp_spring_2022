@@ -1,1 +1,1 @@
-# -msu_python_spring_2022
+For homeworks
