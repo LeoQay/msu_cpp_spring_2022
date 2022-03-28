@@ -172,7 +172,7 @@ int main()
     tests.push_back(test_allocate_many_times);
     tests.push_back(test_block_activity);
 
-    for (int i = 0; i < tests.size(); i++)
+    for (unsigned long i = 0; i < tests.size(); i++)
     {
         tests[i]();
         std::cout << "Test " << i << " done" << std::endl;
