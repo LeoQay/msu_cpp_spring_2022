@@ -1,1 +1,0 @@
-/usr/bin/c++ -g CMakeFiles/02.dir/test_02.cpp.o CMakeFiles/02.dir/Allocator.cpp.o -o 02 
