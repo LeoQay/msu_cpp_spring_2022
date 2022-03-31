@@ -1,184 +1,164 @@
 #include <gtest/gtest.h>
-#include <iostream>
+
 #include <cstring>
-#include <vector>
 
 #include "Allocator.hpp"
 
 
-void test_init_delete()
+class TestAllocator : public ::testing::Test
 {
-    try {
-        Allocator obj;
-        obj.makeAllocator(10);
-    }
-    catch (...)
+protected:
+    void SetUp() override
     {
-        ASSERT_TRUE(false);
+
     }
+    void TearDown() override
+    {
+
+    }
+};
+
+TEST_F(TestAllocator, test_init_delete)
+{
+    Allocator obj;
 }
 
-void test_remake_allocator()
+TEST_F(TestAllocator, test_make_allocator)
 {
-    try {
-        Allocator obj;
-        obj.makeAllocator(100);
-        obj.makeAllocator(1000);
-    }
-    catch (...)
-    {
-        ASSERT_TRUE(false);
-    }
+    Allocator obj;
+    obj.makeAllocator(100);
 }
 
-void test_allocate()
+TEST_F(TestAllocator, test_remake_allocator)
 {
-    try {
-        Allocator obj;
-        obj.makeAllocator(100);
-        char * block = obj.alloc(10);
+    Allocator obj;
+    obj.makeAllocator(100);
+    obj.makeAllocator(1000);
+}
+
+
+TEST_F(TestAllocator, test_alloc)
+{
+    Allocator obj;
+    obj.makeAllocator(100);
+    char * block = obj.alloc(10);
+    ASSERT_TRUE(block != nullptr);
+}
+
+TEST_F(TestAllocator, test_alloc_before_make)
+{
+    Allocator obj;
+    char * block = obj.alloc(1);
+    ASSERT_TRUE(block == nullptr);
+}
+
+TEST_F(TestAllocator, test_alloc_zero_size)
+{
+    Allocator obj;
+    char * block = obj.alloc(0);
+    ASSERT_TRUE(block == nullptr);
+
+    obj.makeAllocator(1000);
+    block = obj.alloc(0);
+    ASSERT_TRUE(block == nullptr);
+}
+
+TEST_F(TestAllocator, test_alloc_range_max)
+{
+    Allocator obj;
+    obj.makeAllocator(100);
+    char * block = obj.alloc(100);
+    ASSERT_TRUE(block != nullptr);
+}
+
+TEST_F(TestAllocator, test_alloc_out_range)
+{
+    Allocator obj;
+    obj.makeAllocator(100);
+    char * block = obj.alloc(101);
+    ASSERT_TRUE(block == nullptr);
+    block = obj.alloc(1000);
+    ASSERT_TRUE(block == nullptr);
+    block = obj.alloc(87);
+    ASSERT_TRUE(block != nullptr);
+}
+
+TEST_F(TestAllocator, test_alloc_many_little_sizes)
+{
+    Allocator obj;
+    obj.makeAllocator(100);
+
+    char * previous, * block = nullptr;
+
+    for (int i = 0; i < 100; i++)
+    {
+        previous = block;
+        block = obj.alloc(1);
+
         ASSERT_TRUE(block != nullptr);
-    }
-    catch (...)
-    {
-        ASSERT_TRUE(false);
-    }
-}
 
-void test_allocate_range_max()
-{
-    try {
-        Allocator obj;
-        obj.makeAllocator(100);
-        char * block = obj.alloc(100);
-        ASSERT_TRUE(block != nullptr);
-    }
-    catch (...)
-    {
-        ASSERT_TRUE(false);
-    }
-}
-
-void test_allocate_more_size()
-{
-    try {
-        Allocator obj;
-        obj.makeAllocator(100);
-        char * block = obj.alloc(101);
-        ASSERT_TRUE(block == nullptr);
-    }
-    catch (...)
-    {
-        ASSERT_TRUE(false);
-    }
-}
-
-void test_allocate_many_times()
-{
-    try {
-        Allocator obj;
-        obj.makeAllocator(100);
-
-        for (int i = 0; i < 100; i++)
+        if (i > 0)
         {
-            char * block = obj.alloc(1);
-            ASSERT_TRUE(block != nullptr);
+            ASSERT_TRUE(block - previous == 1);
         }
     }
-    catch (...)
-    {
-        ASSERT_TRUE(false);
-    }
 }
 
-void test_block_activity()
+TEST_F(TestAllocator, test_saving_block_content)
 {
-    try {
-        Allocator obj;
-        obj.makeAllocator(100);
-        char * block = obj.alloc(50);
-        ASSERT_TRUE(block != nullptr);
-        strcpy(block, "Haha, block activity testing!\n");
-        ASSERT_STREQ("Haha, block activity testing!\n", block);
-        char * block2 = obj.alloc(50);
-        ASSERT_STREQ("Haha, block activity testing!\n", block);
-        memset(block2, 0, 50);
-    }
-    catch (...)
-    {
-        ASSERT_TRUE(false);
-    }
+    Allocator obj;
+    obj.makeAllocator(100);
+
+    char * block = obj.alloc(50);
+    ASSERT_TRUE(block != nullptr);
+
+    strcpy(block, "Haha, block activity testing!\n");
+    ASSERT_STREQ("Haha, block activity testing!\n", block);
+
+    char * block2 = obj.alloc(50);
+    ASSERT_STREQ("Haha, block activity testing!\n", block);
+
+    memset(block2, 0, 50);
 }
 
-void test_reset()
+TEST_F(TestAllocator, test_reset)
 {
-    try {
-        Allocator obj;
-        obj.makeAllocator(100);
-        char * block = obj.alloc(50);
-        ASSERT_TRUE(block != nullptr);
-        memset(block, 0, 50);
-        obj.reset();
-        block = obj.alloc(75);
-        ASSERT_TRUE(block != nullptr);
-    }
-    catch (...)
-    {
-        ASSERT_TRUE(false);
-    }
+    Allocator obj;
+    obj.makeAllocator(100);
+    char * block = obj.alloc(50);
+    ASSERT_TRUE(block != nullptr);
+    memset(block, 0, 50);
+    obj.reset();
+    block = obj.alloc(75);
+    ASSERT_TRUE(block != nullptr);
 }
 
-void test_hard()
+TEST_F(TestAllocator, test_hard)
 {
-    try {
-        Allocator obj;
-        obj.makeAllocator(1000);
-        char * block = obj.alloc(50);
-        ASSERT_TRUE(block != nullptr);
-        memset(block, 0, 50);
-        block = obj.alloc(950);
-        ASSERT_TRUE(block != nullptr);
-        obj.makeAllocator(10000);
-        for (int i = 0; i < 10000; i += 100)
-        {
-            block = obj.alloc(100);
-            ASSERT_TRUE(block != nullptr);
-        }
-        obj.reset();
-        for (int i = 0; i < 10000; i += 100)
-        {
-            block = obj.alloc(100);
-            ASSERT_TRUE(block != nullptr);
-        }
-
-
-    }
-    catch (...)
+    Allocator obj;
+    obj.makeAllocator(1000);
+    char * block = obj.alloc(50);
+    ASSERT_TRUE(block != nullptr);
+    memset(block, 0, 50);
+    block = obj.alloc(950);
+    ASSERT_TRUE(block != nullptr);
+    obj.makeAllocator(10000);
+    for (int i = 0; i < 10000; i += 100)
     {
-        ASSERT_TRUE(false);
+        block = obj.alloc(100);
+        ASSERT_TRUE(block != nullptr);
+    }
+    obj.reset();
+    for (int i = 0; i < 10000; i += 100)
+    {
+        block = obj.alloc(100);
+        ASSERT_TRUE(block != nullptr);
     }
 }
 
 
-int main()
+int main(int argc, char **argv)
 {
-    std::vector<void (*) ()> tests;
-
-    tests.push_back(test_init_delete);
-    tests.push_back(test_remake_allocator);
-    tests.push_back(test_allocate);
-    tests.push_back(test_allocate_range_max);
-    tests.push_back(test_allocate_more_size);
-    tests.push_back(test_allocate_many_times);
-    tests.push_back(test_block_activity);
-
-    for (unsigned long i = 0; i < tests.size(); i++)
-    {
-        tests[i]();
-        std::cout << "Test " << i << " done" << std::endl;
-    }
-
-    std::cout << "Success\n";
-
-    return 0;
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

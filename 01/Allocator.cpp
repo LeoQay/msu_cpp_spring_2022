@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Allocator.hpp"
 
 void Allocator::makeAllocator(size_t maxSize)

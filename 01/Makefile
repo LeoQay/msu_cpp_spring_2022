@@ -1,23 +1,23 @@
 CC=g++
 FLAGS=-std=c++20 -Wall -pedantic -Wextra -Werror
-TEST_FLAGS=$(FLAGS) -lgtest_main -lgtest -lpthread
+TEST_FLAGS=-lgtest_main -lgtest -lpthread
+TEST_NAME=test_01
 
-TEST_NAME=test_02
+.PHONY: test clean
 
-
-test: make_test run_test
+all: make_test
 
 make_test: $(TEST_NAME).o Allocator.o
-	$(CC) $(TEST_FLAGS) $(TEST_NAME).o Allocator.o -o $(TEST_NAME)
-
-run_test:
-	./$(TEST_NAME)
+	$(CC) $(FLAGS) $(TEST_NAME).o Allocator.o -o $(TEST_NAME) $(TEST_FLAGS)
 
 $(TEST_NAME).o: $(TEST_NAME).cpp Allocator.hpp
-	$(CC) $(TEST_FLAGS) $(TEST_NAME).cpp -c
+	$(CC) $(FLAGS) $(TEST_NAME).cpp -c $(TEST_FLAGS)
 
 Allocator.o: Allocator.cpp Allocator.hpp
-	$(CC) $(TEST_FLAGS) Allocator.cpp -c
+	$(CC) $(FLAGS) Allocator.cpp -c
+
+test:
+	./$(TEST_NAME)
 
 clean:
 	rm -f *.o $(TEST_NAME)
