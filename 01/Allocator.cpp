@@ -1,4 +1,4 @@
-#include "Allocator.h"
+#include "Allocator.hpp"
 
 void Allocator::makeAllocator(size_t maxSize)
 {
@@ -10,7 +10,7 @@ void Allocator::makeAllocator(size_t maxSize)
 
 char * Allocator::alloc(size_t size)
 {
-    if (offset + size > max_size)
+    if (size == 0 || offset + size > max_size)
     {
         return nullptr;
     }

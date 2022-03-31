@@ -13,10 +13,10 @@ make_test: $(TEST_NAME).o Allocator.o
 run_test:
 	./$(TEST_NAME)
 
-$(TEST_NAME).o: $(TEST_NAME).cpp Allocator.h
+$(TEST_NAME).o: $(TEST_NAME).cpp Allocator.hpp
 	$(CC) $(TEST_FLAGS) $(TEST_NAME).cpp -c
 
-Allocator.o: Allocator.cpp Allocator.h
+Allocator.o: Allocator.cpp Allocator.hpp
 	$(CC) $(TEST_FLAGS) Allocator.cpp -c
 
 clean:
