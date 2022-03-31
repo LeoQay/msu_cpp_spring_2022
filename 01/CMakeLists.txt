@@ -11,7 +11,7 @@ FetchContent_MakeAvailable(googletest)
 # Now simply link against gtest or gtest_main as needed. Eg
 
 cmake_minimum_required(VERSION 3.16.3)
-project(02)
+project(01)
 
 set(CMAKE_CXX_STANDARD 20)
 
