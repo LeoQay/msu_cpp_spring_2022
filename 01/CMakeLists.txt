@@ -15,6 +15,6 @@ project(02)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(example test_02.cpp Allocator.cpp)
+add_executable(example test_01.cpp Allocator.cpp)
 target_link_libraries(example gtest_main)
 add_test(NAME example_test COMMAND example)
