@@ -3,5 +3,5 @@ project(01)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(01 test_01.cpp Allocator.cpp Allocator.hpp)
+add_executable(01 test_01.cpp allocator.cpp allocator.hpp)
 

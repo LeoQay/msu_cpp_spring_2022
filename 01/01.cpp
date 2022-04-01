@@ -1,5 +1,5 @@
 #include <cstring>
-#include "Allocator.hpp"
+#include "allocator.hpp"
 
 using namespace std;
 

@@ -7,11 +7,11 @@ TEST_NAME=test_01
 
 all: make_test
 
-make_test: $(TEST_NAME).cpp Allocator.o
-	$(CC) $(FLAGS) $(TEST_NAME).cpp Allocator.o -o $(TEST_NAME) $(TEST_LIBS)
+make_test: $(TEST_NAME).cpp allocator.o
+	$(CC) $(FLAGS) $(TEST_NAME).cpp allocator.o -o $(TEST_NAME) $(TEST_LIBS)
 
-Allocator.o: Allocator.cpp Allocator.hpp
-	$(CC) $(FLAGS) Allocator.cpp -c
+allocator.o: allocator.cpp allocator.hpp
+	$(CC) $(FLAGS) allocator.cpp -c
 
 test:
 	./$(TEST_NAME)
