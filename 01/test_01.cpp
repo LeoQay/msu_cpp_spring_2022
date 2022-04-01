@@ -1,6 +1,5 @@
-#include <gtest/gtest.h>
-
 #include <cstring>
+#include <gtest/gtest.h>
 
 #include "Allocator.hpp"
 
@@ -42,25 +41,49 @@ TEST_F(TestAllocator, test_alloc)
     Allocator obj;
     obj.makeAllocator(100);
     char * block = obj.alloc(10);
-    ASSERT_TRUE(block != nullptr);
+    ASSERT_NE(block, nullptr);
 }
 
 TEST_F(TestAllocator, test_alloc_before_make)
 {
     Allocator obj;
     char * block = obj.alloc(1);
-    ASSERT_TRUE(block == nullptr);
+    ASSERT_EQ(block, nullptr);
+}
+
+TEST_F(TestAllocator, test_alloc_chain)
+{
+    Allocator obj;
+    obj.makeAllocator(100);
+    char * block1 = obj.alloc(20);
+    ASSERT_NE(block1, nullptr);
+    char * block2 = obj.alloc(2);
+    ASSERT_NE( block2, nullptr);
+    ASSERT_EQ(block2 - block1, 20);
+    char * block3 = obj.alloc(30);
+    ASSERT_NE(block3, nullptr);
+    ASSERT_EQ(block3 - block2, 2);
+    char * block4 = obj.alloc(48);
+    ASSERT_NE(block4, nullptr);
+    ASSERT_EQ(block4 - block3, 30);
+    char * block5 = obj.alloc(1);
+    ASSERT_EQ(block5, nullptr);
+    obj.reset();
+    char * block6 = obj.alloc(100);
+    ASSERT_NE(block6, nullptr);
+    char * block7 = obj.alloc(1);
+    ASSERT_EQ(block7, nullptr);
 }
 
 TEST_F(TestAllocator, test_alloc_zero_size)
 {
     Allocator obj;
     char * block = obj.alloc(0);
-    ASSERT_TRUE(block == nullptr);
+    ASSERT_EQ(block, nullptr);
 
     obj.makeAllocator(1000);
     block = obj.alloc(0);
-    ASSERT_TRUE(block == nullptr);
+    ASSERT_EQ(block, nullptr);
 }
 
 TEST_F(TestAllocator, test_alloc_range_max)
@@ -68,7 +91,7 @@ TEST_F(TestAllocator, test_alloc_range_max)
     Allocator obj;
     obj.makeAllocator(100);
     char * block = obj.alloc(100);
-    ASSERT_TRUE(block != nullptr);
+    ASSERT_NE(block, nullptr);
 }
 
 TEST_F(TestAllocator, test_alloc_out_range)
@@ -76,11 +99,11 @@ TEST_F(TestAllocator, test_alloc_out_range)
     Allocator obj;
     obj.makeAllocator(100);
     char * block = obj.alloc(101);
-    ASSERT_TRUE(block == nullptr);
+    ASSERT_EQ(block, nullptr);
     block = obj.alloc(1000);
-    ASSERT_TRUE(block == nullptr);
+    ASSERT_EQ(block, nullptr);
     block = obj.alloc(87);
-    ASSERT_TRUE(block != nullptr);
+    ASSERT_NE(block, nullptr);
 }
 
 TEST_F(TestAllocator, test_alloc_many_little_sizes)
@@ -95,11 +118,11 @@ TEST_F(TestAllocator, test_alloc_many_little_sizes)
         previous = block;
         block = obj.alloc(1);
 
-        ASSERT_TRUE(block != nullptr);
+        ASSERT_NE(block, nullptr);
 
         if (i > 0)
         {
-            ASSERT_TRUE(block - previous == 1);
+            ASSERT_EQ(block - previous, 1);
         }
     }
 }
@@ -110,7 +133,7 @@ TEST_F(TestAllocator, test_saving_block_content)
     obj.makeAllocator(100);
 
     char * block = obj.alloc(50);
-    ASSERT_TRUE(block != nullptr);
+    ASSERT_NE(block, nullptr);
 
     strcpy(block, "Haha, block activity testing!\n");
     ASSERT_STREQ("Haha, block activity testing!\n", block);
@@ -126,11 +149,11 @@ TEST_F(TestAllocator, test_reset)
     Allocator obj;
     obj.makeAllocator(100);
     char * block = obj.alloc(50);
-    ASSERT_TRUE(block != nullptr);
+    ASSERT_NE(block, nullptr);
     memset(block, 0, 50);
     obj.reset();
     block = obj.alloc(75);
-    ASSERT_TRUE(block != nullptr);
+    ASSERT_NE(block, nullptr);
 }
 
 TEST_F(TestAllocator, test_hard)
@@ -138,21 +161,21 @@ TEST_F(TestAllocator, test_hard)
     Allocator obj;
     obj.makeAllocator(1000);
     char * block = obj.alloc(50);
-    ASSERT_TRUE(block != nullptr);
+    ASSERT_NE(block, nullptr);
     memset(block, 0, 50);
     block = obj.alloc(950);
-    ASSERT_TRUE(block != nullptr);
+    ASSERT_NE(block, nullptr);
     obj.makeAllocator(10000);
     for (int i = 0; i < 10000; i += 100)
     {
         block = obj.alloc(100);
-        ASSERT_TRUE(block != nullptr);
+        ASSERT_NE(block, nullptr);
     }
     obj.reset();
     for (int i = 0; i < 10000; i += 100)
     {
         block = obj.alloc(100);
-        ASSERT_TRUE(block != nullptr);
+        ASSERT_NE(block, nullptr);
     }
 }
 
