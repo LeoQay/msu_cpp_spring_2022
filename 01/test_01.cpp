@@ -169,7 +169,7 @@ TEST_F(TestAllocator, test_alloc_out_range)
     block = obj.alloc(1000);
     ASSERT_EQ(block, nullptr);
 
-    block = obj.alloc(87);
+    block = obj.alloc(100);
     ASSERT_NE(block, nullptr);
 }
 
