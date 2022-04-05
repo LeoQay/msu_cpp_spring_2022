@@ -5,7 +5,7 @@
 #include <vector>
 
 typedef void (*call_f) ();
-typedef void (*call_str_f) (std::string &);
+typedef void (*call_str_f) (const std::string &);
 
 class TokenParser
 {
@@ -28,7 +28,7 @@ private:
 
     void split(const std::string & line);
 
-    void do_call(call_str_f callback, std::string & token);
+    void do_call(call_str_f callback, const std::string & token);
     void do_call(call_f callback);
 
     bool is_digit_token(const std::string & token);

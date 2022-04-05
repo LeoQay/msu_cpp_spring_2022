@@ -66,7 +66,7 @@ void TokenParser::do_call(call_f callback)
     callback();
 }
 
-void TokenParser::do_call(call_str_f callback, std::string & token)
+void TokenParser::do_call(call_str_f callback, const std::string & token)
 {
     if (!callback)
     {
