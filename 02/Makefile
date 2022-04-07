@@ -18,3 +18,4 @@ test:
 
 clean:
 	rm -f *.o $(TEST_NAME)
+
