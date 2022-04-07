@@ -1,5 +1,5 @@
-#include <algorithm>
 #include <string>
+#include <algorithm>
 
 #include "token_parser.hpp"
 
@@ -84,7 +84,7 @@ void TokenParser::split(const std::string & line)
 
     while (true)
     {
-        while (isspace(line[pos]) && pos < len)
+        while (pos < len && isspace(line[pos]))
         {
             pos++;
         }
@@ -96,7 +96,7 @@ void TokenParser::split(const std::string & line)
 
         size_t start = pos;
 
-        while (!isspace(line[pos]) && pos < len)
+        while (pos < len && !isspace(line[pos]))
         {
             pos++;
         }
@@ -114,7 +114,7 @@ bool TokenParser::is_digit_token(const std::string & token)
     }
 
     size_t start = 0, len = token.size();
-    while (token[start] == '0' && start < len)
+    while (start < len && token[start] == '0')
     {
         start++;
     }
