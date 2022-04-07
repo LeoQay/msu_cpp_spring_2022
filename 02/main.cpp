@@ -10,7 +10,7 @@ int main()
 
     getline(std::cin, s);
 
-    obj.Parse(s);
+    obj.parse(s);
 
     return 0;
 }

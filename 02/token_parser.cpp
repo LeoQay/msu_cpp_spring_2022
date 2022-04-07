@@ -4,35 +4,61 @@
 #include "token_parser.hpp"
 
 
-void TokenParser::SetEndCallback(call_f callback)
+void TokenParser::do_start_call()
+{
+    do_call(start_call);
+}
+
+void TokenParser::do_end_call()
+{
+    do_call(end_call);
+}
+
+void TokenParser::do_digit_call(const std::string & token)
+{
+    do_call(digit_call, token);
+}
+
+void TokenParser::do_token_call(const std::string & token)
+{
+    do_call(token_call, token);
+}
+
+void TokenParser::do_string_call(const std::string & token)
+{
+    do_call(string_call, token);
+}
+
+
+void TokenParser::set_end_call(call_f callback)
 {
     this->end_call = callback;
 }
 
-void TokenParser::SetStartCallback(call_f callback)
+void TokenParser::set_start_call(call_f callback)
 {
     this->start_call = callback;
 }
 
-void TokenParser::SetDigitCallback(call_str_f callback)
+void TokenParser::set_digit_call(call_str_f callback)
 {
     this->digit_call = callback;
 }
 
-void TokenParser::SetStringCallback(call_str_f callback)
+void TokenParser::set_string_call(call_str_f callback)
 {
     this->string_call = callback;
 }
 
-void TokenParser::SetTokenCallback(call_str_f callback)
+void TokenParser::set_token_call(call_str_f callback)
 {
     this->token_call = callback;
 }
 
 
-void TokenParser::Parse(const std::string & line)
+void TokenParser::parse(const std::string & line)
 {
-    do_call(start_call);
+    do_start_call();
 
     token_stack.clear();
 
@@ -44,15 +70,15 @@ void TokenParser::Parse(const std::string & line)
 
         if (is_digit_token(token))
         {
-            do_call(digit_call, token);
+            do_digit_call(token);
         }
         else
         {
-            do_call(string_call, token);
+            do_string_call(token);
         }
     }
 
-    do_call(end_call);
+    do_end_call();
 }
 
 

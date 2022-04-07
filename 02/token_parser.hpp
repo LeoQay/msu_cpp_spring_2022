@@ -11,26 +11,32 @@ class TokenParser
 {
 public:
     TokenParser() = default;
+    virtual ~TokenParser() = default;
 
-    void SetStartCallback(call_f callback);
+    void set_start_call(call_f callback);
 
-    void SetEndCallback(call_f callback);
+    void set_end_call(call_f callback);
 
-    void SetTokenCallback(call_str_f callback);
+    void set_token_call(call_str_f callback);
 
-    void SetDigitCallback(call_str_f callback);
+    void set_digit_call(call_str_f callback);
 
-    void SetStringCallback(call_str_f callback);
+    void set_string_call(call_str_f callback);
 
-    void Parse(const std::string & line);
+    void parse(const std::string & line);
+
+protected:
+    virtual void do_start_call();
+    virtual void do_end_call();
+    virtual void do_token_call(const std::string & token);
+    virtual void do_digit_call(const std::string & token);
+    virtual void do_string_call(const std::string & token);
 
 private:
-
-    void split(const std::string & line);
-
     void do_call(call_str_f callback, const std::string & token);
     void do_call(call_f callback);
 
+    void split(const std::string & line);
     bool is_digit_token(const std::string & token);
 
     call_f start_call = nullptr;

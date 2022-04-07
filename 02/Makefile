@@ -1,6 +1,6 @@
 CC=g++
 FLAGS=-std=c++20 -Wall -pedantic -Wextra -Werror
-TEST_LIBS=-lgtest_main -lgtest -lpthread
+TEST_LIBS=-lgtest_main -lgtest -lgmock -lpthread
 TEST_NAME=test_token_parser
 
 .PHONY: test clean
