@@ -1,5 +1,14 @@
 #include <gtest/gtest.h>
 
+class TestTokenParser : public ::testing::Test
+{
+public:
+    void test()
+    {
+
+    }
+};
+
 
 int main()
 {
