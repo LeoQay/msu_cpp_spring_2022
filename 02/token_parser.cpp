@@ -66,7 +66,7 @@ void TokenParser::parse(const std::string & line)
 
     for (auto & token : token_stack)
     {
-        do_call(token_call, token);
+        do_token_call(token);
 
         if (is_digit_token(token))
         {
