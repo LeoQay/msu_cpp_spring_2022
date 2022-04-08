@@ -1,5 +1,5 @@
-#ifndef INC_01_TOKEN_PARSER_H
-#define INC_01_TOKEN_PARSER_H
+#ifndef TOKEN_PARSER_H
+#define TOKEN_PARSER_H
 
 #include <string>
 #include <vector>
@@ -49,4 +49,4 @@ private:
     std::vector<std::string> token_stack;
 };
 
-#endif //INC_01_TOKEN_PARSER_H
+#endif //TOKEN_PARSER_H
