@@ -17,8 +17,6 @@ public:
 
 class TestTokenParser : public ::testing::Test
 {
-public:
-
 };
 
 TEST_F(TestTokenParser, test_gmock_test)
@@ -145,7 +143,6 @@ TEST_F(TestTokenParser, test_many_strings)
 
     parser.parse("  str  der  wer  er qwr  ");
 }
-
 
 
 int main()
