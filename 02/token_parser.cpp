@@ -1,5 +1,6 @@
 #include <string>
-#include <algorithm>
+#include <sstream>
+#include <iostream>
 
 #include "token_parser.hpp"
 
@@ -14,9 +15,9 @@ void TokenParser::do_end_call()
     do_call(end_call);
 }
 
-void TokenParser::do_digit_call(const std::string & token)
+void TokenParser::do_digit_call(uint64_t value)
 {
-    do_call(digit_call, token);
+    do_call(digit_call, value);
 }
 
 void TokenParser::do_token_call(const std::string & token)
@@ -40,7 +41,7 @@ void TokenParser::set_start_call(call_f callback)
     this->start_call = callback;
 }
 
-void TokenParser::set_digit_call(call_str_f callback)
+void TokenParser::set_digit_call(call_digit_f callback)
 {
     this->digit_call = callback;
 }
@@ -70,7 +71,7 @@ void TokenParser::parse(const std::string & line)
 
         if (is_digit_token(token))
         {
-            do_digit_call(token);
+            do_digit_call(convert_str_to_unit_64(token));
         }
         else
         {
@@ -90,6 +91,16 @@ void TokenParser::do_call(call_f callback)
     }
 
     callback();
+}
+
+void TokenParser::do_call(call_digit_f callback, uint64_t value)
+{
+    if (!callback)
+    {
+        return;
+    }
+
+    callback(value);
 }
 
 void TokenParser::do_call(call_str_f callback, const std::string & token)
@@ -166,4 +177,13 @@ bool TokenParser::is_digit_token(const std::string & token)
 
     // length is equal
     return num <= max_value;
+}
+
+uint64_t TokenParser::convert_str_to_unit_64(const std::string & token)
+{
+    std::stringstream stream;
+    stream << token;
+    uint64_t value;
+    stream >> value;
+    return value;
 }
