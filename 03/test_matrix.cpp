@@ -5,76 +5,73 @@
 
 class TestMatrix : public ::testing::Test {};
 
+class TestMatrixIndexing : public TestMatrix {};
 
 TEST_F(TestMatrix, test_init)
 {
     Matrix matrix(1, 1);
 }
 
-TEST_F(TestMatrix, test_indexing_1)
+TEST_F(TestMatrixIndexing, test_indexing_0)
 {
-    try {
-        Matrix matrix(1, 1);
-        matrix[0][0] = 4;
-        ASSERT_EQ(matrix[0][0], 4);
-    }
-    catch (...)
+    Matrix matrix(3, 10);
+    for (int i = 0; i < 3; i++)
     {
-        ASSERT_TRUE(false);
+        for (int j = 0; j < 10; j++)
+        {
+            ASSERT_EQ(matrix[i][j], 0);
+        }
     }
 }
 
-TEST_F(TestMatrix, test_indexing_2)
+TEST_F(TestMatrixIndexing, test_indexing_1)
 {
-    try {
-        Matrix matrix(10, 10);
+    Matrix matrix(1, 1);
+    matrix[0][0] = 4;
+    int value = matrix[0][0];
 
-        for (int i = 0; i < 10; i++)
-        {
-            for (int j = 0; j < 10; j++)
-            {
-                matrix[i][j] = i + j;
-            }
-        }
+    ASSERT_EQ(value, 4);
+}
 
-        for (int i = 0; i < 10; i++)
+TEST_F(TestMatrixIndexing, test_indexing_2)
+{
+    Matrix matrix(10, 10);
+
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < 10; j++)
         {
-            for (int j = 0; j < 10; j++)
-            {
-                ASSERT_EQ(matrix[i][j], i + j);
-            }
+            matrix[i][j] = i + j;
         }
     }
-    catch (...)
+
+    for (int i = 0; i < 10; i++)
     {
-        ASSERT_TRUE(false);
+        for (int j = 0; j < 10; j++)
+        {
+            ASSERT_EQ(matrix[i][j], i + j);
+        }
     }
 }
 
-TEST_F(TestMatrix, test_indexing_3)
+TEST_F(TestMatrixIndexing, test_indexing_3)
 {
-    try {
-        Matrix matrix(1000, 20);
+    Matrix matrix(1000, 20);
 
-        for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 1000; i++)
+    {
+        for (int j = 0; j < 20; j++)
         {
-            for (int j = 0; j < 20; j++)
-            {
-                matrix[i][j] = i + j;
-            }
-        }
-
-        for (int i = 0; i < 1000; i++)
-        {
-            for (int j = 0; j < 20; j++)
-            {
-                ASSERT_EQ(matrix[i][j], i + j);
-            }
+            matrix[i][j] = i + j;
         }
     }
-    catch (...)
+
+    for (int i = 0; i < 1000; i++)
     {
-        ASSERT_TRUE(false);
+        for (int j = 0; j < 20; j++)
+        {
+            ASSERT_EQ(matrix[i][j], i + j);
+        }
     }
 }
 
