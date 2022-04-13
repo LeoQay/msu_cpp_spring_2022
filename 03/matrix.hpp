@@ -8,6 +8,7 @@ class Matrix
 {
     class ProxyRow;
 public:
+    // по умолчанию матрица заполняется нулями
     explicit Matrix(size_t rows_num, size_t columns_num);
 
     // происходит создание новой динамической памяти для
