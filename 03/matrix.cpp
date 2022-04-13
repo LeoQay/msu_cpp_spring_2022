@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string>
+#include <stdexcept>
 #include <cstring>
 
 #include "matrix.hpp"
@@ -92,6 +92,11 @@ size_t Matrix::get_columns() const
 
 Matrix Matrix::operator+ (Matrix & obj) const
 {
+    if (!is_same_shape(obj))
+    {
+        throw std::range_error("Different shapes");
+    }
+
     Matrix result = *this;
     result += obj;
     return result;
@@ -99,6 +104,11 @@ Matrix Matrix::operator+ (Matrix & obj) const
 
 Matrix & Matrix::operator+= (const Matrix & obj)
 {
+    if (!is_same_shape(obj))
+    {
+        throw std::range_error("Different shapes");
+    }
+
     for (size_t i = 0; i != rows_num_ * columns_num_; i++)
     {
         data_[i] += obj.data_[i];

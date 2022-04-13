@@ -8,7 +8,7 @@ class Matrix
 {
     class ProxyRow;
 public:
-    Matrix(size_t rows_num, size_t columns_num);
+    explicit Matrix(size_t rows_num, size_t columns_num);
 
     // происходит создание новой динамической памяти для
     // данного объекта, старый объект продолжает владеть своей памятью
