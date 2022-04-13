@@ -3,32 +3,66 @@
 #include "matrix.hpp"
 
 
-class TestMatrix : public ::testing::Test {};
+class TestMatrix : public ::testing::Test
+{
+public:
+    static void check_shape(const Matrix & matrix, size_t rows, size_t columns);
+    static void fill(Matrix & matrix, int32_t value);
+};
+
+void TestMatrix::check_shape(const Matrix & matrix, size_t rows, size_t columns)
+{
+    ASSERT_EQ(matrix.get_rows(), rows);
+    ASSERT_EQ(matrix.get_columns(), columns);
+}
+
+void TestMatrix::fill(Matrix & matrix, int32_t value)
+{
+    for (size_t i = 0; i != matrix.get_rows(); i++)
+    {
+        for (size_t j = 0; j != matrix.get_columns(); j++)
+        {
+            matrix[i][j] = value;
+        }
+    }
+}
 
 class TestMatrixBase : public TestMatrix {};
 
 class TestMatrixIndexing : public TestMatrix {};
 
+class TestMatrixCopy : public TestMatrix {};
+
+class TestMatrixAdd : public TestMatrix {};
+
+
 TEST_F(TestMatrixBase, test_init)
 {
     Matrix matrix(1, 1);
+    check_shape(matrix, 1, 1);
 }
 
 TEST_F(TestMatrixBase, test_init_zero)
 {
     Matrix matrix1(0, 10);
+    check_shape(matrix1, 0, 10);
     Matrix matrix2(10, 0);
+    check_shape(matrix2, 10, 0);
     Matrix matrix3(0, 0);
+    check_shape(matrix3, 0, 0);
 }
 
 TEST_F(TestMatrixIndexing, test_indexing_0)
 {
     Matrix matrix(3, 10);
+    check_shape(matrix, 3, 10);
+
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 10; j++)
         {
             ASSERT_EQ(matrix[i][j], 0);
+            check_shape(matrix, 3, 10);
         }
     }
 }
@@ -36,8 +70,13 @@ TEST_F(TestMatrixIndexing, test_indexing_0)
 TEST_F(TestMatrixIndexing, test_indexing_1)
 {
     Matrix matrix(1, 1);
+    check_shape(matrix, 1, 1);
+
     matrix[0][0] = 4;
+    check_shape(matrix, 1, 1);
+
     int value = matrix[0][0];
+    check_shape(matrix, 1, 1);
 
     ASSERT_EQ(value, 4);
 }
@@ -45,12 +84,14 @@ TEST_F(TestMatrixIndexing, test_indexing_1)
 TEST_F(TestMatrixIndexing, test_indexing_2)
 {
     Matrix matrix(10, 10);
+    check_shape(matrix, 10, 10);
 
     for (int i = 0; i < 10; i++)
     {
         for (int j = 0; j < 10; j++)
         {
             matrix[i][j] = i + j;
+            check_shape(matrix, 10, 10);
         }
     }
 
@@ -59,6 +100,7 @@ TEST_F(TestMatrixIndexing, test_indexing_2)
         for (int j = 0; j < 10; j++)
         {
             ASSERT_EQ(matrix[i][j], i + j);
+            check_shape(matrix, 10, 10);
         }
     }
 }
@@ -66,12 +108,14 @@ TEST_F(TestMatrixIndexing, test_indexing_2)
 TEST_F(TestMatrixIndexing, test_indexing_3)
 {
     Matrix matrix(1000, 20);
+    check_shape(matrix, 1000, 20);
 
     for (int i = 0; i < 1000; i++)
     {
         for (int j = 0; j < 20; j++)
         {
             matrix[i][j] = i + j;
+            check_shape(matrix, 1000, 20);
         }
     }
 
@@ -80,6 +124,7 @@ TEST_F(TestMatrixIndexing, test_indexing_3)
         for (int j = 0; j < 20; j++)
         {
             ASSERT_EQ(matrix[i][j], i + j);
+            check_shape(matrix, 1000,20);
         }
     }
 }
@@ -87,9 +132,11 @@ TEST_F(TestMatrixIndexing, test_indexing_3)
 TEST_F(TestMatrixIndexing, test_indexing_wrong_params_1)
 {
     Matrix matrix(10, 20);
+    check_shape(matrix, 10, 20);
 
     try {
         int32_t value = matrix[10][0];
+        check_shape(matrix, 10, 20);
     }
     catch (std::out_of_range &)
     {
@@ -102,9 +149,11 @@ TEST_F(TestMatrixIndexing, test_indexing_wrong_params_1)
 TEST_F(TestMatrixIndexing, test_indexing_wrong_params_2)
 {
     Matrix matrix(12, 2);
+    check_shape(matrix, 12, 2);
 
     try {
         int32_t value = matrix[11][2];
+        check_shape(matrix, 12, 2);
     }
     catch (std::out_of_range &)
     {
@@ -113,6 +162,139 @@ TEST_F(TestMatrixIndexing, test_indexing_wrong_params_2)
 
     ASSERT_TRUE(false);
 }
+
+TEST_F(TestMatrixIndexing, test_indexing_wrong_params_3)
+{
+    Matrix matrix(10, 0);
+    check_shape(matrix, 10, 0);
+
+    try {
+        int32_t value = matrix[4][0];
+        check_shape(matrix, 10, 0);
+    }
+    catch (std::out_of_range &)
+    {
+        return;
+    }
+
+    ASSERT_TRUE(false);
+}
+
+TEST_F(TestMatrixIndexing, test_indexing_wrong_params_4)
+{
+    Matrix matrix(0, 23);
+    check_shape(matrix, 0, 23);
+
+    try {
+        int32_t value = matrix[0][2];
+        check_shape(matrix, 0, 23);
+    }
+    catch(std::out_of_range &)
+    {
+        return;
+    }
+
+    ASSERT_TRUE(false);
+}
+
+TEST_F(TestMatrixCopy, test_copy_1)
+{
+    Matrix matrix1(1, 1);
+    check_shape(matrix1, 1, 1);
+
+    matrix1[0][0] = 123;
+    check_shape(matrix1, 1, 1);
+
+    Matrix matrix2(matrix1);
+    check_shape(matrix2, 1, 1);
+    check_shape(matrix1, 1, 1);
+
+    ASSERT_EQ(matrix1[0][0], 123);
+    ASSERT_EQ(matrix2[0][0], 123);
+
+    check_shape(matrix2, 1, 1);
+    check_shape(matrix1, 1, 1);
+}
+
+TEST_F(TestMatrixCopy, test_copy_2)
+{
+    Matrix matrix1(1, 1);
+    check_shape(matrix1, 1, 1);
+
+    matrix1[0][0] = -12;
+    check_shape(matrix1, 1, 1);
+
+    Matrix matrix2 = matrix1;
+    check_shape(matrix2, 1, 1);
+    check_shape(matrix1, 1, 1);
+
+    ASSERT_EQ(matrix1[0][0], -12);
+    ASSERT_EQ(matrix2[0][0], -12);
+
+    check_shape(matrix2, 1, 1);
+    check_shape(matrix1, 1, 1);
+}
+
+TEST_F(TestMatrixCopy, test_copy_3)
+{
+    Matrix matrix1 = Matrix(2, 10);
+    check_shape(matrix1, 2, 10);
+    fill(matrix1, 23);
+
+    Matrix matrix2 = matrix1;
+    check_shape(matrix2, 2, 10);
+
+    for (int i = 0; i < 2; i++)
+    {
+        for (int j = 0; j < 10; j++)
+        {
+            ASSERT_EQ(matrix1[i][j], 23);
+            ASSERT_EQ(matrix2[i][j], 23);
+        }
+    }
+
+    for (int i = 0; i < 2; i++)
+    {
+        for (int j = 0; j < 10; j++)
+        {
+            matrix1[i][j] = 10;
+            ASSERT_EQ(matrix2[i][j], 23);
+        }
+    }
+}
+
+TEST_F(TestMatrixAdd, test_add_1)
+{
+    Matrix matrix1(1, 1);
+    matrix1[0][0] = 23;
+    Matrix matrix2(1, 1);
+    matrix2[0][0] = -22;
+    matrix2 += matrix1;
+
+    ASSERT_EQ(matrix1[0][0], 23);
+    ASSERT_EQ(matrix2[0][0], 1);
+}
+
+TEST_F(TestMatrixAdd, test_add_2)
+{
+    Matrix matrix1(10, 4);
+    fill(matrix1, 3);
+
+    Matrix matrix2(10, 4);
+    fill(matrix2, 5);
+
+    matrix2 += matrix1;
+
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            ASSERT_EQ(matrix2[i][j], 8);
+            ASSERT_EQ(matrix1[i][j], 3);
+        }
+    }
+}
+
 
 
 int main()
