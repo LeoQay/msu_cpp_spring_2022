@@ -8,6 +8,7 @@ class Matrix
 {
     class ProxyRow;
 public:
+    // создание матрицы с нулевыми сторонами запрещено
     // по умолчанию матрица заполняется нулями
     explicit Matrix(size_t rows_num, size_t columns_num);
 
@@ -31,13 +32,13 @@ public:
     bool operator== (const Matrix & obj) const;
     bool operator!= (const Matrix & obj) const;
 
-    size_t get_rows() const;
-    size_t get_columns() const;
+    [[nodiscard]] size_t get_rows() const;
+    [[nodiscard]] size_t get_columns() const;
 
     friend std::ostream & operator<< (std::ostream & stream, Matrix & obj);
 
 private:
-    bool is_same_shape(const Matrix & obj) const;
+    [[nodiscard]] bool is_same_shape(const Matrix & obj) const;
 
     size_t rows_num_;
     size_t columns_num_;

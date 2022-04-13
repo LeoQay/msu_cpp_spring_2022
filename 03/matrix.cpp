@@ -9,18 +9,19 @@ Matrix::Matrix(size_t rows_num, size_t columns_num)
 :
 rows_num_(rows_num), columns_num_(columns_num), data_(nullptr), rows_(nullptr)
 {
-    data_ = new int32_t [rows_num_ * columns_num_];
-
-    if (rows_num_ > 0)
+    if (rows_num_ == 0 || columns_num_ == 0)
     {
-        rows_ = new ProxyRow [rows_num_];
+        throw std::range_error("Number of rows or columns must be positive");
+    }
 
-        int32_t * setter = data_;
-        for (size_t i = 0; i != rows_num_; i++)
-        {
-            rows_[i].set(setter, columns_num_);
-            setter += columns_num_;
-        }
+    data_ = new int32_t [rows_num_ * columns_num_];
+    rows_ = new ProxyRow [rows_num_];
+
+    int32_t * setter = data_;
+    for (size_t i = 0; i != rows_num_; i++)
+    {
+        rows_[i].set(setter, columns_num_);
+        setter += columns_num_;
     }
 
     memset(data_, 0, (sizeof *data_) * rows_num_ * columns_num_);
@@ -46,17 +47,13 @@ Matrix & Matrix::operator= (const Matrix & obj)
     columns_num_ = obj.columns_num_;
 
     data_ = new int32_t [rows_num_ * columns_num_];
+    rows_ = new ProxyRow [rows_num_];
 
-    if (rows_num_ > 0)
+    int32_t * setter = data_;
+    for (size_t i = 0; i != rows_num_; i++)
     {
-        rows_ = new ProxyRow [rows_num_];
-
-        int32_t * setter = data_;
-        for (size_t i = 0; i != rows_num_; i++)
-        {
-            rows_[i].set(setter, columns_num_);
-            setter += columns_num_;
-        }
+        rows_[i].set(setter, columns_num_);
+        setter += columns_num_;
     }
 
     memcpy(data_, obj.data_, (sizeof *data_) * rows_num_ * columns_num_);
@@ -98,8 +95,7 @@ Matrix Matrix::operator+ (Matrix & obj) const
     }
 
     Matrix result = *this;
-    result += obj;
-    return result;
+    return result += obj;
 }
 
 Matrix & Matrix::operator+= (const Matrix & obj)
@@ -119,8 +115,7 @@ Matrix & Matrix::operator+= (const Matrix & obj)
 Matrix Matrix::operator* (int32_t value) const
 {
     Matrix result = *this;
-    result *= value;
-    return result;
+    return result *= value;
 }
 
 Matrix & Matrix::operator*= (int32_t value)
