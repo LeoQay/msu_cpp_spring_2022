@@ -138,11 +138,11 @@ BigInt::BigInt(const std::string & str)
     }
 
     size_t start = 0, size = str_copy.size();
-    while (start != size && str_copy[0] == '0')
+    while (start != size && str_copy[start] == '0')
     {
         start++;
     }
-    str_copy.substr(0, start);
+    str_copy.erase(0, start);
 
     if (str_copy.empty())
     {
@@ -156,7 +156,7 @@ BigInt::BigInt(const std::string & str)
 
     for (size_t i = 0; i != len; i++)
     {
-        size_t size = str_copy.size();
+        size = str_copy.size();
         size_t pos = size >= 9 ? size - 9 : 0;
         ptr[i] = str_to_uint(str_copy.substr(pos));
         str_copy.erase(pos);
@@ -164,31 +164,51 @@ BigInt::BigInt(const std::string & str)
 }
 
 
-bool BigInt::check_num_token(const std::string & str)
+bool BigInt::operator== (const BigInt & other) const
 {
-    size_t size = str.size();
-
-    if (size == 0)
+    if (is_minus != other.is_minus)
     {
         return false;
     }
 
-    if (size == 1)
+    return equal(other);
+}
+
+
+bool BigInt::operator!= (const BigInt & other) const
+{
+    return !operator==(other);
+}
+
+
+bool BigInt::operator> (const BigInt & other) const
+{
+    if (is_minus == other.is_minus)
     {
-        return std::isdigit(str[0]);
+        return is_minus ^ large(other);
     }
-
-    size_t start = str[0] == '-' ? 1 : 0;
-
-    for (size_t i = start; i != size; i++)
+    else
     {
-        if (!std::isdigit(str[i]))
-        {
-            return false;
-        }
+        return !is_minus;
     }
+}
 
-    return true;
+
+bool BigInt::operator<= (const BigInt & other) const
+{
+    return !operator>(other);
+}
+
+
+bool BigInt::operator>= (const BigInt & other) const
+{
+    return operator>(other) || operator==(other);
+}
+
+
+bool BigInt::operator< (const BigInt &other) const
+{
+    return !operator>=(other);
 }
 
 
@@ -429,6 +449,34 @@ size_t BigInt::low_sub(uint32_t * dest,
     dest[p]--;
 
     return len_a;
+}
+
+
+bool BigInt::check_num_token(const std::string & str)
+{
+    size_t size = str.size();
+
+    if (size == 0)
+    {
+        return false;
+    }
+
+    if (size == 1)
+    {
+        return std::isdigit(str[0]);
+    }
+
+    size_t start = str[0] == '-' ? 1 : 0;
+
+    for (size_t i = start; i != size; i++)
+    {
+        if (!std::isdigit(str[i]))
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 
