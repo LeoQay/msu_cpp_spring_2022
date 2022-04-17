@@ -1,10 +1,16 @@
+#include <iostream>
+#include <iomanip>
+
 #include "bigint.hpp"
+
+
+using namespace std;
 
 int main()
 {
-    BigInt b, c;
+    BigInt b(234), c(23);
 
-    c = 2 + b;
+    cout << b + c;
 
     return 0;
 }
