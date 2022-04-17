@@ -247,6 +247,12 @@ BigInt BigInt::operator+ (const BigInt & other) const
 }
 
 
+BigInt operator+ (int32_t value, const BigInt & other)
+{
+    return other + value;
+}
+
+
 BigInt BigInt::operator- (const BigInt & other) const
 {
     check_none();
@@ -270,6 +276,59 @@ BigInt BigInt::operator- (const BigInt & other) const
         result.is_minus = !is_minus;
         return result;
     }
+}
+
+
+BigInt operator- (int32_t value, const BigInt & other)
+{
+    BigInt result = other;
+    result -= value;
+    result.is_minus = !result.is_minus;
+    return result;
+}
+
+
+BigInt & BigInt::operator+= (const BigInt & other)
+{
+    check_none();
+    other.check_none();
+
+    if (is_minus == other.is_minus)
+    {
+        inplace_add(other);
+    }
+    else if (large(other))
+    {
+        inplace_sub(other);
+    }
+    else
+    {
+        *this = *this + other;
+    }
+
+    return *this;
+}
+
+
+BigInt & BigInt::operator-= (const BigInt & other)
+{
+    check_none();
+    other.check_none();
+
+    if (is_minus != other.is_minus)
+    {
+        inplace_add(other);
+    }
+    else if (large(other))
+    {
+
+    }
+    else
+    {
+
+    }
+
+    return *this;
 }
 
 
@@ -346,6 +405,35 @@ BigInt BigInt::sub(const BigInt & other) const
     result.cut_zeros();
 
     return result;
+}
+
+
+void BigInt::inplace_add(const BigInt & other)
+{
+    size_t max_len = std::max(len, other.len);
+
+    if (real_len >= max_len + 1)
+    {
+        len = low_add(ptr,
+                      ptr, len, other.ptr, other.len);
+    }
+    else
+    {
+        real_len = max_len + offset;
+        auto new_ptr = new uint32_t [real_len];
+        len = low_add(new_ptr,
+                      ptr, len, other.ptr, other.len);
+        delete [] ptr;
+        ptr = new_ptr;
+    }
+}
+
+
+void BigInt::inplace_sub(const BigInt & other)
+{
+    low_sub(ptr,
+            ptr, len, other.ptr, other.len);
+    cut_zeros();
 }
 
 

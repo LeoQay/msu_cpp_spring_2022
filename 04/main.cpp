@@ -7,7 +7,12 @@ using namespace std;
 
 int main()
 {
-    cout << BigInt("0000");
+    BigInt a = -123;
+    BigInt b = 123;
+
+    a += b;
+
+    cout << a;
 
     return 0;
 }

@@ -65,7 +65,9 @@ private:
     // ожидает, что |self| >= |other|
     BigInt sub(const BigInt & other) const;
 
+    void inplace_add(const BigInt & other);
 
+    void inplace_sub(const BigInt & other);
 
     // dest, a, b - могут быть одним адресом
     // Ожидает, что по адресу dest места не меньше, чем 1 + max(len_a, len_b)
