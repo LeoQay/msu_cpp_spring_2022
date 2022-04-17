@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cstring>
 #include <iomanip>
+#include <stdexcept>
 
 #include "bigint.hpp"
 
@@ -117,13 +118,94 @@ BigInt::BigInt(int32_t value)
 
 BigInt::BigInt(const std::string & str)
 {
+    std::string str_copy = str;
 
+    if (str.empty())
+    {
+        make_zero();
+        return;
+    }
+
+    if (!check_num_token(str))
+    {
+        throw std::bad_exception();
+    }
+
+    if (str[0] == '-')
+    {
+        is_minus = true;
+        str_copy.erase(0, 1);
+    }
+
+    size_t start = 0, size = str_copy.size();
+    while (start != size && str_copy[0] == '0')
+    {
+        start++;
+    }
+    str_copy.substr(0, start);
+
+    if (str_copy.empty())
+    {
+        make_zero();
+        return;
+    }
+
+    len = (8 + str_copy.size()) / 9;
+    real_len = len + offset;
+    ptr = new uint32_t [real_len];
+
+    for (size_t i = 0; i != len; i++)
+    {
+        size_t size = str_copy.size();
+        size_t pos = size >= 9 ? size - 9 : 0;
+        ptr[i] = str_to_uint(str_copy.substr(pos));
+        str_copy.erase(pos);
+    }
 }
 
+
+bool BigInt::check_num_token(const std::string & str)
+{
+    size_t size = str.size();
+
+    if (size == 0)
+    {
+        return false;
+    }
+
+    if (size == 1)
+    {
+        return std::isdigit(str[0]);
+    }
+
+    size_t start = str[0] == '-' ? 1 : 0;
+
+    for (size_t i = start; i != size; i++)
+    {
+        if (!std::isdigit(str[i]))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
+BigInt & BigInt::operator-()
+{
+    check_none();
+
+    is_minus = !is_minus;
+    return *this;
+}
 
 
 BigInt BigInt::operator+ (const BigInt & other) const
 {
+    check_none();
+    other.check_none();
+
     if (is_minus == other.is_minus)
     {
         BigInt result = add(other);
@@ -144,6 +226,40 @@ BigInt BigInt::operator+ (const BigInt & other) const
     }
 }
 
+
+BigInt BigInt::operator- (const BigInt & other) const
+{
+    check_none();
+    other.check_none();
+
+    if (is_minus != other.is_minus)
+    {
+        BigInt result = add(other);
+        result.is_minus = is_minus;
+        return result;
+    }
+    else if (large(other))
+    {
+        BigInt result = sub(other);
+        result.is_minus = is_minus;
+        return result;
+    }
+    else
+    {
+        BigInt result = other.sub(*this);
+        result.is_minus = !is_minus;
+        return result;
+    }
+}
+
+
+void BigInt::check_none() const
+{
+    if (ptr == nullptr || len == 0 || real_len == 0)
+    {
+        throw std::bad_exception();
+    }
+}
 
 
 void BigInt::make_zero()
@@ -341,7 +457,7 @@ std::ostream & operator<< (std::ostream & stream, const BigInt & num)
 
     stream << std::setfill('0');
 
-    for (size_t i = 1; i != n; i--)
+    for (size_t i = 1; i != n; i++)
     {
         stream << std::setw(num.digits);
         stream << ptr[n - i - 1];

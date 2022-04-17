@@ -19,7 +19,7 @@ public:
     BigInt(BigInt && other) noexcept;
     BigInt & operator= (BigInt && other) noexcept;
 
-    BigInt & operator-(int);
+    BigInt & operator-();
 
     bool operator== (const BigInt & other) const;
     bool operator!= (const BigInt & other) const;
@@ -87,6 +87,10 @@ private:
     void make_zero();
 
     void cut_zeros();
+
+    void check_none() const;
+
+    static bool check_num_token(const std::string & str);
 
 
     uint32_t * ptr = nullptr;
