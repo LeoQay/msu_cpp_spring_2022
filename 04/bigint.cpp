@@ -484,8 +484,8 @@ void BigInt::inplace_add(const BigInt & other)
 
 void BigInt::inplace_sub(const BigInt & other)
 {
-    low_sub(ptr,
-            ptr, len, other.ptr, other.len);
+    len = low_sub(ptr,
+                  ptr, len, other.ptr, other.len);
     cut_zeros();
 }
 
@@ -708,4 +708,28 @@ bool BigInt::equal(const BigInt & other) const
     }
 
     return true;
+}
+
+
+size_t BigInt::low_mul(uint32_t * dest,
+                       const uint32_t * src, size_t size,
+                       uint32_t value) const
+{
+    uint64_t r = 0;
+
+    size_t i;
+    for (i = 0; i != size; i++)
+    {
+        uint64_t sum = static_cast<uint64_t>(src[i]) * value + r;
+        r = sum / base;
+        dest[i] = sum % base;
+    }
+
+    while (r != 0)
+    {
+        dest[i++] = r % base;
+        r /= base;
+    }
+
+    return i;
 }

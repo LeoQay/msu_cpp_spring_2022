@@ -68,6 +68,7 @@ private:
 
     void inplace_add(const BigInt & other);
 
+    // |self| >= |other|
     void inplace_sub(const BigInt & other);
 
     // dest, a, b - могут быть одним адресом
@@ -83,11 +84,12 @@ private:
                    const uint32_t * a, size_t len_a,
                    const uint32_t * b, size_t len_b) const;
 
-    static int digit_num(uint32_t value, uint32_t _base);
+    // ожидает, что по адресу dest места не меньше, чем (size + 2)
+    size_t low_mul(uint32_t * dest,
+                   const uint32_t * src, size_t size,
+                   uint32_t value) const;
 
-    // ожидает, что строка не длиннее, чем digits,
-    // а также корректные символы (только цифры)
-    static uint32_t str_to_uint(const std::string & str);
+    static int digit_num(uint32_t value, uint32_t _base);
 
     void make_zero();
 
@@ -96,6 +98,10 @@ private:
     void check_none() const;
 
     static bool check_num_token(const std::string & str);
+
+    // ожидает, что строка не длиннее, чем digits,
+    // а также корректные символы (только цифры)
+    static uint32_t str_to_uint(const std::string & str);
 
 
     uint32_t * ptr = nullptr;
