@@ -57,13 +57,14 @@ private:
     // не обращают внимания на знаки
 
     // is self more large than other
-    bool large(const BigInt & other) const;
-    bool equal(const BigInt & other) const;
+    [[nodiscard]] bool large(const BigInt & other) const;
 
-    BigInt add(const BigInt & other) const;
+    [[nodiscard]] bool equal(const BigInt & other) const;
+
+    [[nodiscard]] BigInt add(const BigInt & other) const;
 
     // ожидает, что |self| >= |other|
-    BigInt sub(const BigInt & other) const;
+    [[nodiscard]] BigInt sub(const BigInt & other) const;
 
     void inplace_add(const BigInt & other);
 

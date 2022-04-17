@@ -166,6 +166,9 @@ BigInt::BigInt(const std::string & str)
 
 bool BigInt::operator== (const BigInt & other) const
 {
+    check_none();
+    other.check_none();
+
     if (is_minus != other.is_minus)
     {
         return false;
@@ -177,12 +180,18 @@ bool BigInt::operator== (const BigInt & other) const
 
 bool BigInt::operator!= (const BigInt & other) const
 {
+    check_none();
+    other.check_none();
+
     return !operator==(other);
 }
 
 
 bool BigInt::operator> (const BigInt & other) const
 {
+    check_none();
+    other.check_none();
+
     if (is_minus == other.is_minus)
     {
         return is_minus ^ large(other);
@@ -196,18 +205,27 @@ bool BigInt::operator> (const BigInt & other) const
 
 bool BigInt::operator<= (const BigInt & other) const
 {
+    check_none();
+    other.check_none();
+
     return !operator>(other);
 }
 
 
 bool BigInt::operator>= (const BigInt & other) const
 {
+    check_none();
+    other.check_none();
+
     return operator>(other) || operator==(other);
 }
 
 
 bool BigInt::operator< (const BigInt &other) const
 {
+    check_none();
+    other.check_none();
+
     return !operator>=(other);
 }
 
@@ -247,8 +265,18 @@ BigInt BigInt::operator+ (const BigInt & other) const
 }
 
 
+BigInt BigInt::operator+ (int32_t value) const
+{
+    check_none();
+
+    return *this + BigInt(value);
+}
+
+
 BigInt operator+ (int32_t value, const BigInt & other)
 {
+    other.check_none();
+
     return other + value;
 }
 
@@ -279,10 +307,19 @@ BigInt BigInt::operator- (const BigInt & other) const
 }
 
 
+BigInt BigInt::operator- (int32_t value) const
+{
+    check_none();
+
+    return *this - BigInt(value);
+}
+
+
 BigInt operator- (int32_t value, const BigInt & other)
 {
-    BigInt result = other;
-    result -= value;
+    other.check_none();
+
+    BigInt result = other - value;
     result.is_minus = !result.is_minus;
     return result;
 }
@@ -310,6 +347,14 @@ BigInt & BigInt::operator+= (const BigInt & other)
 }
 
 
+BigInt & BigInt::operator+= (int32_t value)
+{
+    check_none();
+
+    return operator+=(BigInt(value));
+}
+
+
 BigInt & BigInt::operator-= (const BigInt & other)
 {
     check_none();
@@ -321,14 +366,22 @@ BigInt & BigInt::operator-= (const BigInt & other)
     }
     else if (large(other))
     {
-
+        inplace_sub(other);
     }
     else
     {
-
+        *this = *this - other;
     }
 
     return *this;
+}
+
+
+BigInt & BigInt::operator-= (int32_t value)
+{
+    check_none();
+
+    return operator-=(BigInt(value));
 }
 
 
