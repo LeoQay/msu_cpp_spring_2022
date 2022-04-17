@@ -65,6 +65,8 @@ private:
     // ожидает, что |self| >= |other|
     BigInt sub(const BigInt & other) const;
 
+
+
     // dest, a, b - могут быть одним адресом
     // Ожидает, что по адресу dest места не меньше, чем 1 + max(len_a, len_b)
     size_t low_add(uint32_t * dest,
