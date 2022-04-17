@@ -568,4 +568,3 @@ bool BigInt::equal(const BigInt & other) const
 
     return true;
 }
-
