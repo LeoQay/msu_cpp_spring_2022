@@ -108,8 +108,10 @@ private:
     // 2 * (basis ^ power) < 2 ^ 32
     uint32_t base = 1000000000;
     int digits = 9;
+    /*
     int basis = 10;
     int power = 9;
+     */
 };
 
 
