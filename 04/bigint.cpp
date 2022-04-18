@@ -82,15 +82,17 @@ BigInt & BigInt::operator= (BigInt && other) noexcept
 }
 
 
-BigInt::BigInt(int32_t value)
+BigInt & BigInt::operator= (int32_t value)
 {
+    delete [] ptr;
+
     if (value == 0)
     {
         len = 1;
         real_len = 1 + offset;
         ptr = new uint32_t [real_len];
         ptr[0] = 0;
-        return;
+        return *this;
     }
 
     int64_t ext = value;
@@ -113,17 +115,27 @@ BigInt::BigInt(int32_t value)
         ptr[i++] = ext % base;
         ext /= base;
     }
+
+    return *this;
 }
 
 
-BigInt::BigInt(const std::string & str)
+BigInt::BigInt(int32_t value)
 {
+    *this = value;
+}
+
+
+BigInt & BigInt::operator= (const std::string & str)
+{
+    delete [] ptr;
+
     std::string str_copy = str;
 
     if (str.empty())
     {
         make_zero();
-        return;
+        return *this;
     }
 
     if (!check_num_token(str))
@@ -147,7 +159,7 @@ BigInt::BigInt(const std::string & str)
     if (str_copy.empty())
     {
         make_zero();
-        return;
+        return *this;
     }
 
     len = (8 + str_copy.size()) / 9;
@@ -161,6 +173,14 @@ BigInt::BigInt(const std::string & str)
         ptr[i] = str_to_uint(str_copy.substr(pos));
         str_copy.erase(pos);
     }
+
+    return *this;
+}
+
+
+BigInt::BigInt(const std::string & str)
+{
+    *this = str;
 }
 
 

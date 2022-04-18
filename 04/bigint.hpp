@@ -9,9 +9,13 @@ class BigInt
 {
 public:
     BigInt();
-    BigInt(int32_t value);
-    BigInt(const std::string & str);
     virtual ~BigInt();
+
+    BigInt(int32_t value);
+    BigInt & operator= (int32_t value);
+
+    BigInt(const std::string & str);
+    BigInt & operator= (const std::string & str);
 
     BigInt(const BigInt & other);
     BigInt & operator= (const BigInt & other);

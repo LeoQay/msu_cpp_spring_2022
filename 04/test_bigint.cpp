@@ -12,7 +12,18 @@ public:
 };
 
 
-class TestBigIntBase : public TestBigInt {};
+class TestBigIntBase : public TestBigInt
+{
+public:
+    static BigInt for_test_move_1();
+    static BigInt for_test_move_2();
+    static BigInt for_test_move_3();
+    static BigInt for_test_move_4(BigInt & obj);
+    static BigInt for_test_move_5();
+    static BigInt for_test_move_6();
+};
+
+
 class TestBigIntEQ : public TestBigInt {};
 
 
@@ -78,18 +89,70 @@ TEST_F(TestBigIntBase, test_init_string)
 
 TEST_F(TestBigIntBase, test_copy)
 {
-    try {
-        BigInt num1;
-        BigInt num2(num1);
-        num1 = 234346;
-        num2 = num1;
-        num1 = BigInt("2545847634758378365");
-        num2 = num1;
-    }
-    catch (...)
-    {
-        ASSERT_TRUE(false);
-    }
+    BigInt num1;
+    BigInt num2(num1);
+    cmp(num2, "0");
+    cmp(num1, "0");
+    num1 = 234346;
+    cmp(num1, "234346");
+    num2 = num1;
+    cmp(num2, "234346");
+    cmp(num1, "234346");
+    num1 = BigInt("2545847634758378365");
+    cmp(num1, "2545847634758378365");
+    num2 = num1;
+    cmp(num1, "2545847634758378365");
+    cmp(num2, "2545847634758378365");
+    num1 = -124124;
+    num2 = num1;
+    cmp(num1, "-124124");
+    cmp(num2, "-124124");
+
+    num1 = BigInt("16545323254657");
+
+    num1 = num1;
+    num2 = num2;
+
+    cmp(num1, "16545323254657");
+    cmp(num2, "-124124");
+}
+
+
+BigInt TestBigIntBase::for_test_move_1()
+{
+    BigInt num = 1245;
+    return num;
+}
+
+BigInt TestBigIntBase::for_test_move_2()
+{
+    BigInt num;
+    return num;
+}
+
+BigInt TestBigIntBase::for_test_move_3()
+{
+    BigInt num("-124235534235243");
+    return num;
+}
+
+BigInt TestBigIntBase::for_test_move_4(BigInt & obj)
+{
+    return obj;
+}
+
+TEST_F(TestBigIntBase, test_move)
+{
+    BigInt num;
+
+    num = for_test_move_1();
+    cmp(num, "1245");
+    num = for_test_move_2();
+    cmp(num, "0");
+    num = for_test_move_3();
+    cmp(num, "-124235534235243");
+    num = for_test_move_4(num);
+    cmp(num, "-124235534235243");
 }
 
 
