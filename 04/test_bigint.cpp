@@ -744,6 +744,14 @@ TEST_F(TestBigIntAdd, test_add_9)
     cmp(num3, "1000000123");
 }
 
+TEST_F(TestBigIntAdd, test_add_10)
+{
+    BigInt num1("99999999999999999");
+    BigInt num2("-100000000000000000");
+    BigInt num3 = num1 + num2;
+    cmp(num3, "-1");
+}
+
 TEST_F(TestBigIntAdd, test_add_int_1)
 {
     BigInt num1("10000");
@@ -760,6 +768,13 @@ TEST_F(TestBigIntAdd, test_add_int_2)
     cmp(num3, "100000000000000000");
 }
 
+TEST_F(TestBigIntAdd, test_add_int_3)
+{
+    BigInt num1("99999999999999999");
+    int32_t val2 = -999999999;
+    BigInt num3 = num1 + val2;
+    cmp(num3, "99999999000000000");
+}
 
 
 int main()

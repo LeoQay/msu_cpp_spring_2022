@@ -618,9 +618,14 @@ size_t BigInt::low_sub(uint32_t * dest,
 
     for (size_t i = 0; i != len_b;)
     {
-        if (a[i] < b[i])
+        if ((!flag && a[i] < b[i]) || (flag && a[i] <= b[i]))
         {
             dest[i] = base + a[i] - b[i];
+
+            if (flag)
+            {
+                dest[i]--;
+            }
 
             i++;
             while (i != len_b && a[i] == 0)
@@ -629,14 +634,18 @@ size_t BigInt::low_sub(uint32_t * dest,
                 i++;
             }
 
-            if (i == len_b)
-            {
-                flag = true;
-            }
+            flag = true;
         }
         else
         {
             dest[i] = a[i] - b[i];
+
+            if (flag)
+            {
+                dest[i]--;
+                flag = false;
+            }
+
             i++;
         }
     }
