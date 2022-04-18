@@ -359,8 +359,8 @@ BigInt BigInt::operator* (const BigInt & other) const
     }
     else
     {
-        result.is_minus = is_minus && !other.is_minus ||
-        !is_minus && other.is_minus;
+        result.is_minus = (is_minus && !other.is_minus) ||
+        (!is_minus && other.is_minus);
     }
     return result;
 }
@@ -380,8 +380,7 @@ BigInt operator* (int32_t value, const BigInt & other)
 
 BigInt & BigInt::operator*= (const BigInt & other)
 {
-    bool sign = is_minus = is_minus && !other.is_minus ||
-                           !is_minus && other.is_minus;
+    bool sign = (is_minus && !other.is_minus) || (!is_minus && other.is_minus);
     inplace_mul(other);
     is_minus = !check_zero() && sign;
     return *this;

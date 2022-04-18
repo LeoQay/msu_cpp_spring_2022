@@ -11,15 +11,27 @@ public:
     static void cmp(const BigInt & obj, const std::string & s);
 };
 
+void TestBigInt::cmp(const BigInt & obj, const std::string & s)
+{
+    std::stringstream stream;
+    stream << obj;
+    std::string str = stream.str();
+    ASSERT_EQ(str, s);
+}
+
 
 class TestBigIntInit : public TestBigInt {};
-
 
 class TestBigIntInitNoArgs : public TestBigIntInit {};
 
 class TestBigIntInitInt : public TestBigIntInit {};
 
-class TestBigIntInitStr : public TestBigIntInit {};
+class TestBigIntInitStr : public TestBigIntInit
+{
+public:
+    static void wrong_argument(const std::string & str);
+    static void difficult_argument(const std::string & str);
+};
 
 class TestBigIntInitCopy : public TestBigIntInit {};
 
@@ -30,20 +42,23 @@ public:
     static BigInt for_test_move_2();
     static BigInt for_test_move_3();
     static BigInt for_test_move_4(BigInt & obj);
-    static BigInt for_test_move_5();
-    static BigInt for_test_move_6();
+    static BigInt for_test_move_5(const BigInt & num);
 };
 
-class TestBigIntEQ : public TestBigInt {};
 
+class TestBigIntCmp : public TestBigInt {};
 
-void TestBigInt::cmp(const BigInt & obj, const std::string & s)
-{
-    std::stringstream stream;
-    stream << obj;
-    std::string str = stream.str();
-    ASSERT_EQ(str, s);
-}
+class TestBigIntEQ : public TestBigIntCmp {};
+
+class TestBigIntNE : public TestBigIntCmp {};
+
+class TestBigIntGT : public TestBigIntCmp {};
+
+class TestBigIntGE : public TestBigIntCmp {};
+
+class TestBigIntLT : public TestBigIntCmp {};
+
+class TestBigIntLE : public TestBigIntCmp {};
 
 
 TEST_F(TestBigIntInitNoArgs, test_init_no_args_1)
@@ -156,6 +171,62 @@ TEST_F(TestBigIntInitStr, test_init_str_11)
     cmp(num11, "12423345436356575674684835567468");
 }
 
+void TestBigIntInitStr::wrong_argument(const std::string & str)
+{
+    try {
+        BigInt num(str);
+    }
+    catch (std::exception &)
+    {
+        return;
+    }
+    ASSERT_TRUE(false);
+}
+
+void TestBigIntInitStr::difficult_argument(const std::string & str)
+{
+    try {
+        BigInt num(str);
+    }
+    catch (std::exception &)
+    {
+        ASSERT_TRUE(false);
+    }
+}
+
+TEST_F(TestBigIntInitStr, test_init_str_wrong_1)
+{
+    wrong_argument("-");
+}
+
+TEST_F(TestBigIntInitStr, test_init_str_wrong_2)
+{
+    wrong_argument("0-");
+    wrong_argument("1235-");
+    wrong_argument("234-234");
+}
+
+TEST_F(TestBigIntInitStr, test_init_str_wrong_3)
+{
+    wrong_argument("WEGRAH");
+    wrong_argument("e12");
+    wrong_argument("_233");
+    wrong_argument("934f");
+}
+
+TEST_F(TestBigIntInitStr, test_init_str_diff_1)
+{
+    difficult_argument("00000");
+    difficult_argument("0000102");
+    difficult_argument("-01023");
+    difficult_argument("-0000000000120000012");
+}
+
+TEST_F(TestBigIntInitStr, test_init_str_diff_2)
+{
+    difficult_argument("");
+}
+
 
 TEST_F(TestBigIntInitCopy, test_copy_1)
 {
@@ -195,6 +266,16 @@ TEST_F(TestBigIntInitCopy, test_copy_4)
     num2 = num2;
     cmp(num1, "16545323254657");
     cmp(num2, "-124124");
+}
+
+TEST_F(TestBigIntInitCopy, test_copy_5)
+{
+    BigInt num1 = 123;
+    cmp(num1, "123");
+    BigInt num2 = 345;
+    num1 = num2;
+    cmp(num1, "345");
+    cmp(num2, "345");
 }
 
 
@@ -249,6 +330,19 @@ TEST_F(TestBigIntInitMove, test_move_4)
     BigInt num("-124235534235243");
     num = for_test_move_4(num);
     cmp(num, "-124235534235243");
+}
+
+BigInt TestBigIntInitMove::for_test_move_5(const BigInt & num)
+{
+    BigInt num2 = num + 23;
+    return num2;
+}
+
+TEST_F(TestBigIntInitMove, test_move_5)
+{
+    BigInt num1 = 42343;
+    BigInt num = for_test_move_5(num1);
+    cmp(num, "42366");
 }
 
 
