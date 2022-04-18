@@ -45,7 +45,6 @@ public:
     static BigInt for_test_move_5(const BigInt & num);
 };
 
-
 class TestBigIntCmp : public TestBigInt {};
 
 class TestBigIntEQ : public TestBigIntCmp {};
@@ -59,6 +58,9 @@ class TestBigIntGE : public TestBigIntCmp {};
 class TestBigIntLT : public TestBigIntCmp {};
 
 class TestBigIntLE : public TestBigIntCmp {};
+
+class TestBigIntAdd : public TestBigInt {};
+
 
 
 TEST_F(TestBigIntInitNoArgs, test_init_no_args_1)
@@ -385,44 +387,58 @@ TEST_F(TestBigIntEQ, test_eq_6)
     ASSERT_FALSE(num1 == num2);
 }
 
+TEST_F(TestBigIntEQ, test_eq_7)
+{
+    BigInt num1("111111");
+    BigInt num2("2189");
+    ASSERT_FALSE(num1 == num2);
+}
+
+TEST_F(TestBigIntEQ, test_eq_8)
+{
+    BigInt num1("1111112345345345354345345345");
+    BigInt num2("218934534534535345345534343");
+    ASSERT_FALSE(num1 == num2);
+}
+
 
 TEST_F(TestBigIntNE, test_ne_1)
 {
     BigInt num1, num2 = 0;
-    ASSERT_TRUE(num1 == num2);
+    ASSERT_FALSE(num1 != num2);
 }
 
 TEST_F(TestBigIntNE, test_ne_2)
 {
     BigInt num1 = 123, num2 = -123;
-    ASSERT_FALSE(num1 == num2);
+    ASSERT_TRUE(num1 != num2);
 }
 
 TEST_F(TestBigIntNE, test_ne_3)
 {
     BigInt num1("123456789987654321"), num2("123456789987654321");
-    ASSERT_TRUE(num1 == num2);
+    ASSERT_FALSE(num1 != num2);
 }
 
 TEST_F(TestBigIntNE, test_ne_4)
 {
     BigInt num1("-987654321123456789987654321");
     BigInt num2("987654321123456789987654321");
-    ASSERT_FALSE(num1 == num2);
+    ASSERT_TRUE(num1 != num2);
 }
 
 TEST_F(TestBigIntNE, test_ne_5)
 {
     BigInt num1("123456789123456789123456789");
     BigInt num2("123455789123456789123456789");
-    ASSERT_FALSE(num1 == num2);
+    ASSERT_TRUE(num1 != num2);
 }
 
 TEST_F(TestBigIntNE, test_ne_6)
 {
     BigInt num1("111111111123456789");
     BigInt num2("211111111123456789");
-    ASSERT_FALSE(num1 == num2);
+    ASSERT_TRUE(num1 != num2);
 }
 
 
@@ -487,58 +503,178 @@ TEST_F(TestBigIntLE, test_le_1)
 {
     BigInt num1("1");
     BigInt num2("1");
-    ASSERT_FALSE(num1 > num2);
+    ASSERT_TRUE(num1 <= num2);
 }
 
 TEST_F(TestBigIntLE, test_le_2)
 {
     BigInt num1("2");
     BigInt num2("1");
-    ASSERT_TRUE(num1 > num2);
+    ASSERT_FALSE(num1 <= num2);
 }
 
 TEST_F(TestBigIntLE, test_le_3)
 {
     BigInt num1("2");
     BigInt num2("4");
-    ASSERT_FALSE(num1 > num2);
+    ASSERT_TRUE(num1 <= num2);
 }
 
 TEST_F(TestBigIntLE, test_le_4)
 {
     BigInt num1("-123");
     BigInt num2("122");
-    ASSERT_FALSE(num1 > num2);
+    ASSERT_TRUE(num1 <= num2);
 }
 
 TEST_F(TestBigIntLE, test_le_5)
 {
     BigInt num1("23746283765783234123");
     BigInt num2("122");
-    ASSERT_TRUE(num1 > num2);
+    ASSERT_FALSE(num1 <= num2);
 }
 
 TEST_F(TestBigIntLE, test_le_6)
 {
     BigInt num1("23746283765783234123");
     BigInt num2("-4553122");
-    ASSERT_TRUE(num1 > num2);
+    ASSERT_FALSE(num1 <= num2);
 }
 
 TEST_F(TestBigIntLE, test_le_7)
 {
     BigInt num1("0");
     BigInt num2("4553122");
-    ASSERT_FALSE(num1 > num2);
+    ASSERT_TRUE(num1 <= num2);
 }
 
 TEST_F(TestBigIntLE, test_le_8)
 {
     BigInt num1("1230");
     BigInt num2("0");
-    ASSERT_TRUE(num1 > num2);
+    ASSERT_FALSE(num1 <= num2);
 }
 
+
+TEST_F(TestBigIntGE, test_ge_1)
+{
+    BigInt num1("123");
+    BigInt num2("123");
+    ASSERT_TRUE(num1 >= num2);
+}
+
+TEST_F(TestBigIntGE, test_ge_2)
+{
+    BigInt num1("143");
+    BigInt num2("-144");
+    ASSERT_TRUE(num1 >= num2);
+}
+
+TEST_F(TestBigIntGE, test_ge_3)
+{
+    BigInt num1("0");
+    BigInt num2("0");
+    ASSERT_TRUE(num1 >= num2);
+}
+
+TEST_F(TestBigIntGE, test_ge_4)
+{
+    BigInt num1("0");
+    BigInt num2("1245342");
+    ASSERT_FALSE(num1 >= num2);
+}
+
+TEST_F(TestBigIntGE, test_ge_5)
+{
+    BigInt num1("12435432");
+    BigInt num2("1245342");
+    ASSERT_TRUE(num1 >= num2);
+}
+
+TEST_F(TestBigIntGE, test_ge_6)
+{
+    BigInt num1("124354321243543212435432");
+    BigInt num2("124354321243543212435432");
+    ASSERT_TRUE(num1 >= num2);
+}
+
+TEST_F(TestBigIntGE, test_ge_7)
+{
+    BigInt num1("-124354321243543212435432");
+    BigInt num2("-124354321243543212435432");
+    ASSERT_TRUE(num1 >= num2);
+}
+
+TEST_F(TestBigIntGE, test_ge_8)
+{
+    BigInt num1("-124354321243543212435433");
+    BigInt num2("-124354321243543212435432");
+    ASSERT_FALSE(num1 >= num2);
+}
+
+
+TEST_F(TestBigIntLT, test_lt_1)
+{
+    BigInt num1("123");
+    BigInt num2("123");
+    ASSERT_FALSE(num1 < num2);
+}
+
+TEST_F(TestBigIntLT, test_lt_2)
+{
+    BigInt num1("143");
+    BigInt num2("-144");
+    ASSERT_FALSE(num1 < num2);
+}
+
+TEST_F(TestBigIntLT, test_lt_3)
+{
+    BigInt num1("0");
+    BigInt num2("0");
+    ASSERT_FALSE(num1 < num2);
+}
+
+TEST_F(TestBigIntLT, test_lt_4)
+{
+    BigInt num1("0");
+    BigInt num2("1245342");
+    ASSERT_TRUE(num1 < num2);
+}
+
+TEST_F(TestBigIntLT, test_lt_5)
+{
+    BigInt num1("12435432");
+    BigInt num2("1245342");
+    ASSERT_FALSE(num1 < num2);
+}
+
+TEST_F(TestBigIntLT, test_lt_6)
+{
+    BigInt num1("124354321243543212435432");
+    BigInt num2("124354321243543212435432");
+    ASSERT_FALSE(num1 < num2);
+}
+
+TEST_F(TestBigIntLT, test_lt_7)
+{
+    BigInt num1("-124354321243543212435432");
+    BigInt num2("-124354321243543212435432");
+    ASSERT_FALSE(num1 < num2);
+}
+
+TEST_F(TestBigIntLT, test_lt_8)
+{
+    BigInt num1("-124354321243543212435433");
+    BigInt num2("-124354321243543212435432");
+    ASSERT_TRUE(num1 < num2);
+}
+
+
+
+TEST_F(TestBigIntAdd, test_add_1)
+{
+
+}
 
 
 
