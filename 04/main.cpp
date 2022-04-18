@@ -7,9 +7,13 @@ using namespace std;
 
 int main()
 {
-    BigInt a("9999");
+    BigInt a = "2123456789";
 
-    cout << a + a;
+    cout << a << std::endl;
+
+    a -= 123456789;
+
+    cout << a;
 
     return 0;
 }

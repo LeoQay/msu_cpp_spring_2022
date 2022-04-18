@@ -254,12 +254,14 @@ BigInt BigInt::operator+ (const BigInt & other) const
     {
         BigInt result = sub(other);
         result.is_minus = is_minus;
+        result.set_zero_sign();
         return result;
     }
     else
     {
         BigInt result = other.sub(*this);
         result.is_minus = other.is_minus;
+        result.set_zero_sign();
         return result;
     }
 }
@@ -296,12 +298,14 @@ BigInt BigInt::operator- (const BigInt & other) const
     {
         BigInt result = sub(other);
         result.is_minus = is_minus;
+        result.set_zero_sign();
         return result;
     }
     else
     {
         BigInt result = other.sub(*this);
         result.is_minus = !is_minus;
+        result.set_zero_sign();
         return result;
     }
 }
@@ -321,6 +325,7 @@ BigInt operator- (int32_t value, const BigInt & other)
 
     BigInt result = other - value;
     result.is_minus = !result.is_minus;
+    result.set_zero_sign();
     return result;
 }
 
@@ -337,6 +342,7 @@ BigInt & BigInt::operator+= (const BigInt & other)
     else if (large(other))
     {
         inplace_sub(other);
+        set_zero_sign();
     }
     else
     {
@@ -367,6 +373,7 @@ BigInt & BigInt::operator-= (const BigInt & other)
     else if (large(other))
     {
         inplace_sub(other);
+        set_zero_sign();
     }
     else
     {
@@ -450,7 +457,7 @@ BigInt BigInt::sub(const BigInt & other) const
     BigInt result;
 
     delete [] result.ptr;
-    result.real_len = std::max(len, other.len);
+    result.real_len = std::max(len, other.len) + offset;
     result.ptr = new uint32_t [result.real_len];
     result.len = low_sub(
     result.ptr,ptr, len, other.ptr, other.len);
@@ -487,6 +494,11 @@ void BigInt::inplace_sub(const BigInt & other)
     len = low_sub(ptr,
                   ptr, len, other.ptr, other.len);
     cut_zeros();
+
+    if (check_zero())
+    {
+        is_minus = false;
+    }
 }
 
 
@@ -587,7 +599,10 @@ size_t BigInt::low_sub(uint32_t * dest,
         dest[i] = a[i];
     }
 
-    dest[p]--;
+    if (flag)
+    {
+        dest[p]--;
+    }
 
     return len_a;
 }
@@ -671,6 +686,21 @@ void BigInt::cut_zeros()
     {
         len--;
     }
+}
+
+
+void BigInt::set_zero_sign()
+{
+    if (check_zero())
+    {
+        is_minus = false;
+    }
+}
+
+
+bool BigInt::check_zero() const
+{
+    return ptr != nullptr && real_len >= 1 && len == 1 && ptr[0] == 0;
 }
 
 

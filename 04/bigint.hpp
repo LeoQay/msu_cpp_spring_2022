@@ -97,6 +97,10 @@ private:
 
     void check_none() const;
 
+    void set_zero_sign();
+
+    [[nodiscard]] bool check_zero() const;
+
     static bool check_num_token(const std::string & str);
 
     // ожидает, что строка не длиннее, чем digits,
