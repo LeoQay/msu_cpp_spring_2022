@@ -670,10 +670,94 @@ TEST_F(TestBigIntLT, test_lt_8)
 }
 
 
-
 TEST_F(TestBigIntAdd, test_add_1)
 {
+    BigInt num1 = 1;
+    BigInt num2 = 1;
+    BigInt num3 = num1 + num2;
+    cmp(num3, "2");
+}
 
+TEST_F(TestBigIntAdd, test_add_2)
+{
+    BigInt num1 = 1;
+    BigInt num2 = -1;
+    BigInt num3 = num1 + num2;
+    cmp(num3, "0");
+}
+
+TEST_F(TestBigIntAdd, test_add_3)
+{
+    BigInt num1 = 12345;
+    BigInt num2 = -1;
+    BigInt num3 = num1 + num2;
+    cmp(num3, "12344");
+}
+
+TEST_F(TestBigIntAdd, test_add_4)
+{
+    BigInt num1("123456789123456789");
+    BigInt num2("-123456789123456789");
+    BigInt num3 = num1 + num2;
+    cmp(num3, "0");
+}
+
+TEST_F(TestBigIntAdd, test_add_5)
+{
+    BigInt num1("999999999999999999999999999999999999");
+    BigInt num2("1");
+    BigInt num3 = num1 + num2;
+    cmp(num3, "1000000000000000000000000000000000000");
+}
+
+TEST_F(TestBigIntAdd, test_add_6)
+{
+
+    BigInt num1("1000000000000000000000000000000000000");
+    BigInt num2("-1");
+    BigInt num3 = num1 + num2;
+    cmp(num3, "999999999999999999999999999999999999");
+}
+
+TEST_F(TestBigIntAdd, test_add_7)
+{
+
+    BigInt num1("1000000000000000000000000000000000000");
+    BigInt num2("-9999999999991");
+    BigInt num3 = num1 + num2;
+    cmp(num3, "999999999999999999999990000000000009");
+}
+
+TEST_F(TestBigIntAdd, test_add_8)
+{
+    BigInt num1("999999999");
+    BigInt num2("999999999");
+    BigInt num3 = num1 + num2;
+    cmp(num3, "1999999998");
+}
+
+TEST_F(TestBigIntAdd, test_add_9)
+{
+    BigInt num1("1000000000");
+    BigInt num2("123");
+    BigInt num3 = num1 + num2;
+    cmp(num3, "1000000123");
+}
+
+TEST_F(TestBigIntAdd, test_add_int_1)
+{
+    BigInt num1("10000");
+    int32_t val2 = 1234;
+    BigInt num3 = num1 + val2;
+    cmp(num3, "11234");
+}
+
+TEST_F(TestBigIntAdd, test_add_int_2)
+{
+    BigInt num1("99999999999999999");
+    int32_t val2 = 1;
+    BigInt num3 = num1 + val2;
+    cmp(num3, "100000000000000000");
 }
 
 

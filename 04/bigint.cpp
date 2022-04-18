@@ -782,6 +782,7 @@ bool BigInt::large(const BigInt & other) const
     return false;
 }
 
+
 bool BigInt::equal(const BigInt & other) const
 {
     if (len != other.len)
