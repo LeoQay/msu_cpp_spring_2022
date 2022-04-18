@@ -682,11 +682,6 @@ bool BigInt::check_num_token(const std::string & str)
 
 std::ostream & operator<< (std::ostream & stream, const BigInt & num)
 {
-    if (num.is_minus)
-    {
-        stream << '-';
-    }
-
     auto ptr = num.ptr;
     size_t n = num.len;
 
@@ -695,11 +690,15 @@ std::ostream & operator<< (std::ostream & stream, const BigInt & num)
         return stream;
     }
 
+    if (num.is_minus)
+    {
+        stream << '-';
+    }
+
     stream << ptr[n - 1];
 
     if (n == 1)
     {
-        stream << std::endl;
         return stream;
     }
 
@@ -712,8 +711,6 @@ std::ostream & operator<< (std::ostream & stream, const BigInt & num)
     }
 
     stream << std::setfill(' ');
-
-    stream << std::endl;
 
     return stream;
 }
