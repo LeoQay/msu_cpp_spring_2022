@@ -330,6 +330,50 @@ BigInt operator- (int32_t value, const BigInt & other)
 }
 
 
+BigInt BigInt::operator* (const BigInt & other) const
+{
+    BigInt result = mul(other);
+    if (check_zero())
+    {
+        result.is_minus = false;
+    }
+    else
+    {
+        result.is_minus = is_minus && !other.is_minus ||
+        !is_minus && other.is_minus;
+    }
+    return result;
+}
+
+
+BigInt BigInt::operator* (int32_t value) const
+{
+    return operator*(BigInt(value));
+}
+
+
+BigInt operator* (int32_t value, const BigInt & other)
+{
+    return other * BigInt(value);
+}
+
+
+BigInt & BigInt::operator*= (const BigInt & other)
+{
+    bool sign = is_minus = is_minus && !other.is_minus ||
+                           !is_minus && other.is_minus;
+    inplace_mul(other);
+    is_minus = !check_zero() && sign;
+    return *this;
+}
+
+
+BigInt & BigInt::operator*= (int32_t value)
+{
+    return *this *= BigInt(value);
+}
+
+
 BigInt & BigInt::operator+= (const BigInt & other)
 {
     check_none();
@@ -738,6 +782,94 @@ bool BigInt::equal(const BigInt & other) const
     }
 
     return true;
+}
+
+
+BigInt BigInt::mul(const BigInt & other) const
+{
+    if (check_zero() || other.check_zero())
+    {
+        return 0;
+    }
+
+    BigInt result;
+    delete [] result.ptr;
+    result.len = 1;
+    result.real_len = len + other.len + offset;
+    result.ptr = new uint32_t [real_len];
+    result.ptr[0] = 0;
+
+    const uint32_t * first = ptr, * second = other.ptr;
+    size_t len1 = len, len2 = other.len;
+
+    if (len1 < len2)
+    {
+       std::swap(first, second);
+       std::swap(len1, len2);
+    }
+
+    auto buffer = new uint32_t [len1 + 1];
+
+    for (size_t i = 0; i != len2; i++)
+    {
+        size_t length = low_mul(buffer,
+                first, len1, second[i]);
+        result.len = i + low_add(result.ptr + i,
+                             result.ptr + i, result.len - i,
+                             buffer, length);
+    }
+
+    delete [] buffer;
+    return result;
+}
+
+
+void BigInt::inplace_mul(const BigInt & other)
+{
+    if (check_zero())
+    {
+        return;
+    }
+    if (other.check_zero())
+    {
+        make_zero();
+        return;
+    }
+
+    if (real_len < len + other.len)
+    {
+        *this = mul(other);
+        return;
+    }
+
+    size_t save_len = len;
+    auto saver = new uint32_t [len];
+    memcpy(saver, ptr, len * sizeof *ptr);
+    ptr[0] = 0;
+    len = 1;
+
+    auto buffer = new uint32_t [real_len];
+
+    const uint32_t * first = saver, * second = other.ptr;
+    size_t len1 = save_len, len2 = other.len;
+
+    if (len1 < len2)
+    {
+        std::swap(first, second);
+        std::swap(len1, len2);
+    }
+
+    for (size_t i = 0; i != len2; i++)
+    {
+        size_t length = low_mul(buffer,
+                                first, len1, second[i]);
+        len = i + low_add(ptr + i,
+                          ptr + i, len - i,
+                          buffer, length);
+    }
+
+    delete [] buffer;
+    delete [] saver;
 }
 
 

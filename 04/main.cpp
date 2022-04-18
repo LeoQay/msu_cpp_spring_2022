@@ -7,11 +7,10 @@ using namespace std;
 
 int main()
 {
-    BigInt a = "2123456789";
+    BigInt a("35575674867347647856746546534");
+    BigInt b("88734563475673463478534765746");
 
-    cout << a << std::endl;
-
-    a -= 123456789;
+    a *= b;
 
     cout << a;
 
