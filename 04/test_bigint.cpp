@@ -968,6 +968,71 @@ TEST_F(TestBigIntSub, test_inplace_sub_8)
     cmp(num1, "0");
 }
 
+TEST_F(TestBigIntMul, test_mul_1)
+{
+    BigInt num1("123");
+    BigInt num2("3");
+    BigInt num3 = num1 * num2;
+    cmp(num3, "369");
+}
+
+TEST_F(TestBigIntMul, test_mul_2)
+{
+    BigInt num1("-123");
+    BigInt num2("3");
+    BigInt num3 = num1 * num2;
+    cmp(num3, "-369");
+}
+
+TEST_F(TestBigIntMul, test_mul_3)
+{
+    BigInt num1("-1233745637845673485637485");
+    BigInt num2("0");
+    BigInt num3 = num1 * num2;
+    cmp(num3, "0");
+}
+
+TEST_F(TestBigIntMul, test_mul_4)
+{
+    BigInt num1("-1233745637845673485637485");
+    BigInt num2("9");
+    BigInt num3 = num1 * num2;
+    cmp(num3, "-11103710740611061370737365");
+}
+
+TEST_F(TestBigIntMul, test_inplace_mul_1)
+{
+    BigInt num1("-1233745637845673485637485");
+    BigInt num2("9");
+    num1 *= num2;
+    cmp(num1, "-11103710740611061370737365");
+}
+
+TEST_F(TestBigIntMul, test_inplace_mul_2)
+{
+    BigInt num1("123");
+    BigInt num2("3");
+    num1 *= num2;
+    cmp(num1, "369");
+}
+
+TEST_F(TestBigIntMul, test_inplace_mul_3)
+{
+    BigInt num1("-123");
+    BigInt num2("3");
+    num1 *= num2;
+    cmp(num1, "-369");
+}
+
+TEST_F(TestBigIntMul, test_inplace_mul_4)
+{
+    BigInt num1("-1233745637845673485637485");
+    BigInt num2("0");
+    num1 *= num2;
+    cmp(num1, "0");
+}
+
+
 
 int main()
 {

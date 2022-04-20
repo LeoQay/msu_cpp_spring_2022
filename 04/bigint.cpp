@@ -353,7 +353,9 @@ BigInt operator- (int32_t value, const BigInt & other)
 BigInt BigInt::operator* (const BigInt & other) const
 {
     BigInt result = mul(other);
-    if (check_zero())
+    result.cut_zeros();
+
+    if (result.check_zero())
     {
         result.is_minus = false;
     }
