@@ -3,9 +3,9 @@ project(hw_cpp_vk)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(05 main.cpp serializer.cpp serializer.hpp)
+add_executable(05 main.cpp serializer.cpp serializer.hpp deserializer.h)
 
-add_executable(test05 test_serializer.cpp serializer.cpp serializer.hpp)
+add_executable(test05 test_serializer.cpp )
 
 target_link_libraries(test05 gtest_main)
 target_link_libraries(test05 gtest)
