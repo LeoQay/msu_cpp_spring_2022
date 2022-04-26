@@ -8,7 +8,8 @@
 enum class Error
 {
     NoError,
-    CorruptedArchive
+    CorruptedArchive,
+    WriteError
 };
 
 
@@ -58,7 +59,7 @@ Error Serializer::process(bool arg)
     }
     catch (...)
     {
-        return Error::CorruptedArchive;
+        return Error::WriteError;
     }
     return Error::NoError;
 }
@@ -71,7 +72,7 @@ Error Serializer::process(uint64_t arg)
     }
     catch (...)
     {
-        return Error::CorruptedArchive;
+        return Error::WriteError;
     }
     return Error::NoError;
 }
@@ -80,16 +81,19 @@ Error Serializer::process(uint64_t arg)
 template<class T, class... ArgsT>
 Error Serializer::process(T arg, ArgsT ...args)
 {
-    if (process(arg) == Error::CorruptedArchive)
+    Error ret = process(arg);
+
+    if (ret != Error::NoError)
     {
-        return Error::CorruptedArchive;
+        return ret;
     }
 
     if constexpr (sizeof... (args) > 0)
     {
-        if (process(args...) == Error::CorruptedArchive)
+        ret = process(args...);
+        if (ret != Error::NoError)
         {
-            return Error::CorruptedArchive;
+            return ret;
         }
     }
 
