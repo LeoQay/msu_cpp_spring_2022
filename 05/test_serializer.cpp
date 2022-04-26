@@ -79,9 +79,7 @@ TEST_F(TestSeries, test_default)
     err = deserializer.load(y);
     ASSERT_EQ(err, Error::NoError);
 
-    ASSERT_EQ(x.a, y.a);
-    ASSERT_EQ(x.b, y.b);
-    ASSERT_EQ(x.c, y.c);
+    ASSERT_TRUE(x == y);
 }
 
 
@@ -162,16 +160,18 @@ TEST_F(TestSeries, test_ser_delser)
     Data x3 = {0, false, 0};
     BigInt x4 = {{0}};
 
-    deserializer.load(x3);
+    err = deserializer.load(x3);
+    ASSERT_EQ(err, Error::NoError);
     ASSERT_TRUE(x1 == x3);
-    deserializer.load(x4);
+    err = deserializer.load(x4);
+    ASSERT_EQ(err, Error::NoError);
     ASSERT_TRUE(x2 == x4);
-    deserializer.load(x4);
+    err = deserializer.load(x4);
+    ASSERT_EQ(err, Error::NoError);
     ASSERT_TRUE(x2 == x4);
-    deserializer.load(x3);
+    err = deserializer.load(x3);
+    ASSERT_EQ(err, Error::NoError);
     ASSERT_TRUE(x1 == x3);
-
-
 }
 
 
@@ -203,6 +203,28 @@ TEST_F(TestSeries, test_wrong_stream_3)
     stream << "true";
     Deserializer deserializer(stream);
     uint64_t value = 2;
+    Error ret = deserializer(value);
+    ASSERT_NE(ret, Error::NoError);
+}
+
+
+TEST_F(TestSeries, test_wrong_stream_4)
+{
+    std::stringstream stream;
+    stream << "1-234232";
+    Deserializer deserializer(stream);
+    uint64_t value = 2;
+    Error ret = deserializer(value);
+    ASSERT_NE(ret, Error::NoError);
+}
+
+
+TEST_F(TestSeries, test_wrong_stream_5)
+{
+    std::stringstream stream;
+    stream << "1";
+    Deserializer deserializer(stream);
+    bool value = true;
     Error ret = deserializer(value);
     ASSERT_NE(ret, Error::NoError);
 }
