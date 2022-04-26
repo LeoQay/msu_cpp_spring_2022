@@ -15,9 +15,13 @@ struct Data
     {
         return serializer(a, b, c);
     }
+
+    template<class Deserializer>
+    Error deserialize(Deserializer & deserializer)
+    {
+        return deserializer(a, b, c);
+    }
 };
-
-
 
 
 int main()
@@ -31,10 +35,9 @@ int main()
 
     Data y { 0, false, 0 };
 
-    serializer.save(y);
+    Deserializer deserializer(stream);
 
-    std::string str = stream.str();
-
+    deserializer.load(y);
 
     return 0;
 }
