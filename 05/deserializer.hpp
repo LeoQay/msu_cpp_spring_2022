@@ -20,11 +20,11 @@ public:
     template<class... ArgsT>
     Error operator() (ArgsT & ...args);
 
+    Error process(bool & value);
+    Error process(uint64_t & value);
+
 private:
 
-    Error process(bool & value);
-
-    Error process(uint64_t & value);
     static bool is_digit_token(const std::string & token);
     static uint64_t convert_str_to_uint_64(const std::string & token);
 

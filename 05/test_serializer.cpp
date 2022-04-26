@@ -26,10 +26,7 @@ struct Data
 
 
 
-class TestSeries : public ::testing::Test
-{
-public:
-};
+class TestSeries : public ::testing::Test {};
 
 
 TEST_F(TestSeries, test_default)
@@ -51,6 +48,23 @@ TEST_F(TestSeries, test_default)
     ASSERT_EQ(x.a, y.a);
     ASSERT_EQ(x.b, y.b);
     ASSERT_EQ(x.c, y.c);
+}
+
+
+TEST_F(TestSeries, test_1)
+{
+    std::stringstream stream;
+
+    bool var = true;
+    Serializer serializer(stream);
+    Error ret = serializer.process(var);
+    ASSERT_EQ(ret, Error::NoError);
+
+    bool other_var = false;
+    Deserializer deserializer(stream);
+    ret = deserializer.process(other_var);
+    ASSERT_EQ(ret, Error::NoError);
+    ASSERT_EQ(var, other_var);
 }
 
 
