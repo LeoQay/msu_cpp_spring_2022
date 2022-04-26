@@ -9,7 +9,8 @@ enum class Error
 {
     NoError,
     CorruptedArchive,
-    WriteError
+    WriteError,
+    ReadError
 };
 
 
@@ -92,7 +93,8 @@ Error Serializer::process(bool arg)
     {
         return Error::WriteError;
     }
-    return Error::NoError;
+
+    return out_.fail() ? Error::WriteError : Error::NoError;
 }
 
 
@@ -105,7 +107,8 @@ Error Serializer::process(uint64_t arg)
     {
         return Error::WriteError;
     }
-    return Error::NoError;
+
+    return out_.fail() ? Error::WriteError : Error::NoError;
 }
 
 
@@ -155,6 +158,11 @@ Error Deserializer::process(bool & value)
     std::string text;
     in_ >> text;
 
+    if (in_.fail())
+    {
+        return Error::ReadError;
+    }
+
     if (text == "true")
     {
         value = true;
@@ -176,6 +184,11 @@ Error Deserializer::process(uint64_t & value)
 {
     std::string str;
     in_ >> str;
+
+    if (in_.fail())
+    {
+        return Error::ReadError;
+    }
 
     if (is_digit_token(str))
     {
