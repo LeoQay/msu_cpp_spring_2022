@@ -1,16 +1,14 @@
 CC=g++
-PROJECT_NAME=serializer
 FLAGS=-std=c++20 -Wall -pedantic -Wextra -Werror
 TEST_LIBS=-lgtest_main -lgtest -lpthread
-TEST_NAME=test_$(PROJECT_NAME)
-HPP_FILE=$(PROJECT_NAME).hpp
+TEST_NAME=test_serializer
 
 .PHONY: test clean
 
 all: make_test
 
-make_test:  $(HPP_FILE) $(TEST_NAME).cpp
-	$(CC) $(FLAGS) $(TEST_NAME).cpp $(HPP_FILE) -o $(TEST_NAME) $(TEST_LIBS)
+make_test: $(TEST_NAME).cpp serializer.cpp serializer.hpp deserializer.cpp deserializer.hpp
+	$(CC) $(FLAGS) $(TEST_NAME).cpp serializer.cpp deserializer.cpp -o $(TEST_NAME) $(TEST_LIBS)
 
 test:
 	./$(TEST_NAME)
