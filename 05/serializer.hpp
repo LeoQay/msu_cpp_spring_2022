@@ -18,10 +18,10 @@ public:
     template <class... ArgsT>
     Error operator() (ArgsT... args);
 
+private:
+
     Error process(bool arg);
     Error process(uint64_t arg);
-
-private:
 
     template<class T, class... ArgsT>
     Error process(T arg, ArgsT ...args);
