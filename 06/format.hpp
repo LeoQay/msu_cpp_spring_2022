@@ -24,6 +24,7 @@ private:
     void clear();
     void collect_scope_stat(const std::string & str);
     Error collect_place_stat();
+
     static bool is_digit_token(const std::string & token);
     static uint64_t convert_str_to_uint_64(const std::string & token);
 
