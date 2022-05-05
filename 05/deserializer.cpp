@@ -14,7 +14,7 @@ Error Deserializer::process(bool & value)
 
     if (in_.fail())
     {
-        return Error::ReadError;
+        return Error::CorruptedArchive;
     }
 
     if (text == "true")
@@ -41,7 +41,7 @@ Error Deserializer::process(uint64_t & value)
 
     if (in_.fail())
     {
-        return Error::ReadError;
+        return Error::CorruptedArchive;
     }
 
     if (is_digit_token(str))
@@ -69,7 +69,7 @@ bool Deserializer::is_digit_token(const std::string & token)
 
     while (start < len && token[start] == '0')
     {
-        ++start;
+        start++;
     }
 
     std::string num = token.substr(start);
