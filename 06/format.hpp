@@ -45,7 +45,16 @@ std::string format(const std::string & str, const ArgsT & ...args)
     }
 
     std::vector<std::string> arguments;
-    collect(arguments, args...);
+
+    if constexpr (sizeof...(args) > 0)
+    {
+        collect(arguments, args...);
+    }
+    else
+    {
+        // never reached
+        throw ArgsAmountFormatException(val + 1, 0);
+    }
 
     std::string result = proc.substrings[0];
     size_t len = proc.arg_num.size();

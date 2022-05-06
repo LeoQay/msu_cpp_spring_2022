@@ -6,9 +6,11 @@
 class TestFormat : public ::testing::Test {};
 
 
-TEST_F(TestFormat, test_1)
+TEST_F(TestFormat, test_no_scopes_no_args)
 {
-
+    std::string to_format = "Some string";
+    auto result = format(to_format);
+    ASSERT_EQ(to_format, result);
 }
 
 
