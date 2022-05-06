@@ -33,4 +33,14 @@ private:
 };
 
 
+class ArgsAmountFormatException : public FormatException
+{
+public:
+    ArgsAmountFormatException(size_t in_format, size_t actual);
+private:
+    size_t in_format_;
+    size_t actual_;
+};
+
+
 #endif //HW_CPP_VK_FORMAT_EXCEPTION_H
