@@ -22,7 +22,7 @@ public:
         }
         catch (...)
         {
-            ASSERT_EQ("Exception", "No exceptions");
+            ASSERT_EQ("Exception has been thrown", "");
         }
 
         ASSERT_EQ(result, correct);
@@ -148,11 +148,33 @@ TEST_F(TestFormat, test_bad_scopes_2)
 TEST_F(TestFormat, test_bad_arg_lex)
 {
     bad_format("{a}", 2, 3);
-    bad_format("Haha, {0} and {-1}", "Arg-1", "Arg0");
+    bad_format("Haha, {0} and {-1}",
+               "Arg-1", "Arg0");
 }
 
 
+TEST_F(TestFormat, test_repeat_1)
+{
+    good_format("Arg0 or not Arg1 or Arg1 or not Arg0",
+                "{0} or not {1} or {1} or not {0}",
+                "Arg0", "Arg1");
+}
 
+
+TEST_F(TestFormat, test_repeat_2_and_only_scopes)
+{
+    good_format("ArgumentArgumentArgumentArgument",
+                "{0}{0}{0}{0}",
+                "Argument", 2, true, 3);
+
+    good_format("2222",
+                "{1}{1}{1}{1}",
+                "Argument", 2, true, 3);
+
+    good_format("3333",
+                "{3}{3}{3}{3}",
+                "Argument", 2, true, 3);
+}
 
 
 int main()
