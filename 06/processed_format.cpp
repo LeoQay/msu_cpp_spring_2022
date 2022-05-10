@@ -138,7 +138,7 @@ bool ProcessedFormat::is_digit_token(const std::string & token)
 
     if (num.empty())
     {
-        return true;
+        return start > 0;
     }
 
     // for uint64_t from <stdint.h>
