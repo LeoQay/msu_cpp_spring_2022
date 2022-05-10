@@ -97,7 +97,7 @@ void ProcessedFormat::collect_place_stat()
 {
     if (scope_stat.size() % 2 != 0)
     {
-        throw ScopeFormatException(scope_stat.back().second + 1);
+        throw ScopeFormatException(scope_stat.back().second);
     }
 
     size_t len = scope_stat.size();

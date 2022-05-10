@@ -17,6 +17,7 @@ const char * FormatException::what()
 ScopeFormatException::ScopeFormatException(size_t pos)
 : FormatException() , pos_(pos)
 {
+    // if not even, position = last scope, else first unsatisfied
     std::stringstream stream;
     stream << pos_;
     msg_ = "Scope error in position: " + stream.str();
@@ -26,7 +27,8 @@ ScopeFormatException::ScopeFormatException(size_t pos)
 ArgLexFormatException::ArgLexFormatException(const std::string & err)
 : err_(err)
 {
-    msg_ = "Lex error of argument in: " + err;
+    // err = stripped token
+    msg_ = "Lex error of argument in: \"" + err + "\"";
 }
 
 
