@@ -58,14 +58,16 @@ TEST_F(TestFormat, test_no_scopes_some_args)
 TEST_F(TestFormat, test_some_scopes_no_args_1)
 {
     bad_format<ArgsAmountFormatException>(
-    "Some string with {0}");
+        "Some string with {0}"
+    );
 }
 
 
 TEST_F(TestFormat, test_some_scopes_no_args_2)
 {
     bad_format<ArgsAmountFormatException>(
-    "Some string with {1} and with {0}");
+        "Some string with {1} and with {0}"
+    );
 }
 
 
@@ -88,15 +90,18 @@ TEST_F(TestFormat, test_one_scope_one_arg_2)
 TEST_F(TestFormat, test_more_scopes_than_args_1)
 {
     bad_format<ArgsAmountFormatException>(
-    "Qwerty {1} {0} lala",
-    "I am only one");
+        "Qwerty {1} {0} lala",
+        "I am only one"
+    );
 }
 
 
 TEST_F(TestFormat, test_more_scopes_than_args_2)
 {
-    bad_format<ArgsAmountFormatException>("{10}",
-               "Arg0", "Arg1", "Arg2", 3, 4);
+    bad_format<ArgsAmountFormatException>(
+        "{10}",
+        "Arg0", "Arg1", "Arg2", 3, 4
+   );
 }
 
 
@@ -141,8 +146,9 @@ TEST_F(TestFormat, test_bad_arg_lex)
 {
     bad_format<ArgLexFormatException>("{a}", 2, 3);
     bad_format<ArgLexFormatException>(
-    "Haha, {0} and {-1}",
-    "Arg-1", "Arg0");
+        "Haha, {0} and {-1}",
+        "Arg-1", "Arg0"
+    );
 }
 
 
