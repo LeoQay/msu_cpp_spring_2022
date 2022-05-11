@@ -5,13 +5,13 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(07 main.cpp
         my_vector.cpp my_vector.hpp
-        my_allocator.cpp my_allocator.hpp
-        my_iterator.cpp my_iterator.hpp)
+        my_allocator.hpp
+        my_iterator.hpp)
 
 add_executable(test07 test_vector.cpp
         my_vector.cpp my_vector.hpp
-        my_allocator.cpp my_allocator.hpp
-        my_iterator.cpp my_iterator.hpp)
+        my_allocator.hpp
+        my_iterator.hpp)
 
 target_link_libraries(test07 gtest_main)
 target_link_libraries(test07 gtest)

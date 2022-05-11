@@ -4,6 +4,7 @@
 #include <algorithm>
 
 #include "my_allocator.hpp"
+#include "my_iterator.hpp"
 
 
 template<typename T, typename AllocT = Allocator<T>>
@@ -15,7 +16,6 @@ public:
     using reference = T &;
     using allocator_type = AllocT;
 private:
-
 
 };
 
