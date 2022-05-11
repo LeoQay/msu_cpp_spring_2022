@@ -22,8 +22,6 @@ private:
 template<typename T>
 constexpr T * Allocator<T>::allocate(std::size_t n)
 {
-    std::cout << "Alloc " << n << "\n";
-
     if (n == 0) return nullptr;
     return new T[n];
 }
