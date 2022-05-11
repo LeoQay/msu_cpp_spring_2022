@@ -14,11 +14,16 @@ public:
     using difference_type = std::ptrdiff_t;
     using pointer = T *;
     using reference = T &;
+    using const_pointer = const T *;
+    using const_reference = const T &;
 
     explicit VectorIterator(T * ptr);
 
-    reference operator * () const;
-    pointer operator -> () const;
+    reference operator * ();
+    pointer operator -> ();
+
+    const_reference operator * () const;
+    const_pointer operator -> () const;
 
     reference operator[] (std::int64_t n) const;
 
@@ -102,7 +107,7 @@ VectorIterator<T>::operator- (const VectorIterator<T> & other) const
 
 template<typename T>
 typename VectorIterator<T>::reference
-VectorIterator<T>::operator*() const
+VectorIterator<T>::operator*()
 {
     return *ptr_;
 }
@@ -110,10 +115,27 @@ VectorIterator<T>::operator*() const
 
 template<typename T>
 typename VectorIterator<T>::pointer
+VectorIterator<T>::operator-> ()
+{
+    return ptr_;
+}
+
+
+template<typename T>
+typename VectorIterator<T>::const_reference
+VectorIterator<T>::operator*() const
+{
+    return *ptr_;
+}
+
+
+template<typename T>
+typename VectorIterator<T>::const_pointer
 VectorIterator<T>::operator-> () const
 {
     return ptr_;
 }
+
 
 
 template<typename T>

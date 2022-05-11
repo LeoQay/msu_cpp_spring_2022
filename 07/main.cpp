@@ -1,14 +1,13 @@
 #include <iostream>
+#include <vector>
+
 
 #include "my_vector.hpp"
 
 
 int main()
 {
-    int * arr = new int[20];
-
-    auto it = VectorIterator<int>(arr);
-    auto it2 = it + 12;
+    Vector<int> v;
 
     return 0;
 }
