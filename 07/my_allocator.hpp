@@ -2,7 +2,7 @@
 #define HW_CPP_VK_MY_ALLOCATOR_HPP
 
 
-#include <algorithm>
+#include <memory>
 
 
 template<typename T>
@@ -22,6 +22,8 @@ private:
 template<typename T>
 constexpr T * Allocator<T>::allocate(std::size_t n)
 {
+    std::cout << "Alloc " << n << "\n";
+
     if (n == 0) return nullptr;
     return new T[n];
 }

@@ -226,22 +226,6 @@ void Vector<T, AllocT>::pop_back()
 
     array[current_offset - 1].~T();
     current_offset--;
-
-    if (2 * current_offset <= allocated_size)
-    {
-        auto new_arr = new T[current_offset];
-        if (!new_arr)
-        {
-            throw std::bad_alloc();
-        }
-        for (size_type i = 0; i != current_offset; i++)
-        {
-            new_arr[i] = array[i];
-        }
-        delete [] array;
-        array = new_arr;
-        allocated_size = current_offset;
-    }
 }
 
 
