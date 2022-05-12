@@ -18,6 +18,10 @@ TEST_F(TestMyVectorBase, test_base_2)
 {
     Vector<int> vector(10);
     ASSERT_EQ(vector.size(), 10);
+    for (int i = 0; i < 10; i++)
+    {
+        ASSERT_EQ(vector[i], 0);
+    }
 }
 
 TEST_F(TestMyVectorBase, test_base_3)
@@ -45,6 +49,25 @@ TEST_F(TestMyVectorBase, test_base_4)
         ASSERT_EQ(i, 5);
     }
 }
+
+
+TEST_F(TestMyVectorBase, test_base_5)
+{
+    Vector<int> vector(10, 5);
+    Vector<int> v2 = vector;
+    ASSERT_EQ(v2.size(), 10);
+    ASSERT_EQ(vector.size(), 10);
+    for (auto i : vector)
+    {
+        ASSERT_EQ(i, 5);
+    }
+    for (auto i : v2)
+    {
+        ASSERT_EQ(i, 5);
+    }
+}
+
+
 
 
 int main()

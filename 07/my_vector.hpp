@@ -89,6 +89,14 @@ allocator()
         array = allocator.allocate(n);
         check_array();
     }
+
+    if (std::enable_if<true, std::is_integral<T>>::type::value)
+    {
+        for (size_type i = 0; i != current_offset; i++)
+        {
+            array[i] = 0;
+        }
+    }
 }
 
 
@@ -114,11 +122,20 @@ allocator()
 
 template<typename T, class AllocT>
 Vector<T, AllocT>::Vector(const Vector<T, AllocT> & other) :
-array(new T(other.allocated_size)),
+array(nullptr),
 current_offset(other.current_offset),
-allocated_size(other.allocated_size),
-allocator(std::move(other.allocator))
+allocated_size(other.current_offset),
+allocator(other.allocator)
 {
+    if (other.current_offset == 0)
+    {
+        allocated_size = 0;
+        return;
+    }
+
+    array = allocator.allocate(current_offset);
+    check_array();
+
     for (size_type i = 0; i != current_offset; i++)
     {
         array[i] = other.array[i];
@@ -276,7 +293,7 @@ typename Vector<T, AllocT>::iterator
 Vector<T, AllocT>::begin()
 {
     decltype(array) ptr = nullptr;
-    return iterator(array);
+    return iterator(array ? array : ptr + 1);
 }
 
 
@@ -285,7 +302,7 @@ typename Vector<T, AllocT>::iterator
 Vector<T, AllocT>::end()
 {
     decltype(array) ptr = nullptr;
-    return iterator(array + current_offset);
+    return iterator(array ? array + current_offset: ptr + 1);
 }
 
 

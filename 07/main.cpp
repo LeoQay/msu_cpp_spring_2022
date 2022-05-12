@@ -15,9 +15,6 @@ public:
 
 int main()
 {
-    std::vector<A, Allocator<A>> v(4);
-
-    v.resize(2);
 
 
     return 0;
