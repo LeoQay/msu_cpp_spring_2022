@@ -249,6 +249,92 @@ TEST_F(TestMyVectorDynamic, test_d_4)
 }
 
 
+TEST_F(TestMyVectorDynamic, test_d_5)
+{
+    Vector<int> vector;
+    ASSERT_TRUE(vector.empty());
+    vector.resize(20);
+    ASSERT_EQ(vector.size(), 20);
+    for (int i = 0; i < 20; i++) vector[i] = i + 5;
+    ASSERT_FALSE(vector.empty());
+}
+
+
+TEST_F(TestMyVectorDynamic, test_d_6)
+{
+    Vector<int> vector(10, 3);
+    vector.resize(20);
+    ASSERT_EQ(vector.size(), 20);
+    for (int i = 0; i < 10; i++) ASSERT_EQ(vector[i], 3);
+    for (int i = 10; i < 20; i++) vector[i] = 5;
+    vector.resize(20);
+    ASSERT_EQ(vector.size(), 20);
+    for (int i = 0; i < 10; i++) ASSERT_EQ(vector[i], 3);
+    for (int i = 10; i < 20; i++) ASSERT_EQ(vector[i], 5);
+}
+
+
+TEST_F(TestMyVectorDynamic, test_d_7)
+{
+    Vector<int> vector(100, 2);
+    ASSERT_EQ(vector.size(), 100);
+    vector.resize(20);
+    ASSERT_EQ(vector.size(), 20);
+}
+
+
+TEST_F(TestMyVectorDynamic, test_d_8)
+{
+    Vector<int> vector(50, 1);
+
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < 200; j++) vector.push_back(j + 50);
+        vector.resize(50);
+    }
+
+    ASSERT_EQ(vector.size(), 50);
+    for (int i = 0; i < 50; i++) ASSERT_EQ(vector[i], 1);
+}
+
+
+TEST_F(TestMyVectorDynamic, test_d_9)
+{
+    Vector<int> vector;
+
+    vector.push_back(1);
+    vector.pop_back();
+    ASSERT_TRUE(vector.empty());
+
+    vector.push_back(2);
+    vector.push_back(3);
+    ASSERT_EQ(vector.size(), 2);
+
+    vector.pop_back();
+    ASSERT_EQ(vector.size(), 1);
+
+    vector.pop_back();
+    ASSERT_TRUE(vector.empty());
+}
+
+
+TEST_F(TestMyVectorDynamic, test_d_10)
+{
+    Vector<int> vector(50, 1);
+
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < 200; j++) vector.push_back(j + 50);
+        for (int j = 0; j < 200; j++) vector.pop_back();
+    }
+
+    ASSERT_EQ(vector.size(), 50);
+    for (int i = 0; i < 50; i++) ASSERT_EQ(vector[i], 1);
+}
+
+
+
+
 int main()
 {
     ::testing::InitGoogleTest();

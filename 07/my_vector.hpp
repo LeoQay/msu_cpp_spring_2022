@@ -369,9 +369,18 @@ constexpr void Vector<T, AllocT>::resize(size_type count)
         {
             new_array[i] = array[i];
         }
+
         delete [] array;
         array = new_array;
         allocated_size = count;
+    }
+
+    if (std::enable_if<true, std::is_integral<T>>::type::value)
+    {
+        for (size_type i = current_offset; i != count; i++)
+        {
+            array[i] = 0;
+        }
     }
 
     current_offset = count;
