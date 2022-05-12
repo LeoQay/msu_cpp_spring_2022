@@ -75,6 +75,18 @@ TEST_F(TestMyVectorBase, test_base_5)
 }
 
 
+TEST_F(TestMyVectorBase, test_base_6)
+{
+    Vector<int> v;
+    Vector<int> s = v;
+    ASSERT_TRUE(s.empty());
+    ASSERT_TRUE(v.empty());
+    s.push_back(1);
+    ASSERT_EQ(s.size(), 1);
+    ASSERT_NE(v.size(), 1);
+}
+
+
 TEST_F(TestMyVectorIndexAndIter, test_i_1)
 {
     Vector<int> vector;
@@ -377,6 +389,24 @@ TEST_F(TestMyVectorDynamic, test_d_12)
     vector.resize(25, 4);
     ASSERT_EQ(vector.size(), 25);
     for (int i = 0; i < 25; i++) ASSERT_EQ(vector[i], 1);
+}
+
+
+TEST_F(TestMyVectorDynamic, test_d_13)
+{
+    Vector<int> vector(50, 1);
+    vector.clear();
+    ASSERT_TRUE(vector.empty());
+    vector.clear();
+    ASSERT_TRUE(vector.empty());
+}
+
+
+TEST_F(TestMyVectorDynamic, test_d_14)
+{
+    Vector<int> vector;
+    vector.reserve(1000);
+    for (int i = 0; i < 1000; i++) vector.push_back(1 + i);
 }
 
 
