@@ -5,12 +5,19 @@
 #include "my_vector.hpp"
 
 
+class A
+{
+public:
+    A() {std::cout << "A::A()\n";}
+    ~A() {std::cout << "A::~A()\n";}
+};
+
+
 int main()
 {
-    std::vector<int, Allocator<int>> v(2000);
+    std::vector<A, Allocator<A>> v(4);
 
-    for (int i = 0; i < 2000; i++) v.pop_back();
-
+    v.resize(2);
 
 
     return 0;

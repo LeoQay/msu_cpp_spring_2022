@@ -50,6 +50,11 @@ public:
     reverse_iterator rbegin();
     reverse_iterator rend();
 
+    constexpr void reserve(size_type new_cap);
+
+    constexpr void resize(size_type count);
+    constexpr void resize(size_type count, const value_type & val);
+
 private:
 
     void check_array() const;
@@ -58,6 +63,8 @@ private:
     T * array;
     size_type current_offset;
     size_type allocated_size;
+
+    allocator_type allocator;
 };
 
 
@@ -65,7 +72,8 @@ template<typename T, class AllocT>
 Vector<T, AllocT>::Vector() :
 array(nullptr),
 current_offset(0),
-allocated_size(0)
+allocated_size(0),
+allocator()
 {}
 
 
@@ -73,11 +81,12 @@ template<typename T, class AllocT>
 Vector<T, AllocT>::Vector(size_type n) :
 array(nullptr),
 current_offset(n),
-allocated_size(n)
+allocated_size(n),
+allocator()
 {
     if (n)
     {
-        array = new T[n];
+        array = allocator.allocate(n);
         check_array();
     }
 }
@@ -87,11 +96,12 @@ template<typename T, class AllocT>
 Vector<T, AllocT>::Vector(size_type n, const_reference fill) :
 array(nullptr),
 current_offset(n),
-allocated_size(n)
+allocated_size(n),
+allocator()
 {
     if (n)
     {
-        array = new T[n];
+        array = allocator.allocate(n);
         check_array();
     }
 
@@ -106,7 +116,8 @@ template<typename T, class AllocT>
 Vector<T, AllocT>::Vector(const Vector<T, AllocT> & other) :
 array(new T(other.allocated_size)),
 current_offset(other.current_offset),
-allocated_size(other.allocated_size)
+allocated_size(other.allocated_size),
+allocator(std::move(other.allocator))
 {
     for (size_type i = 0; i != current_offset; i++)
     {
@@ -119,7 +130,8 @@ template<typename T, class AllocT>
 Vector<T, AllocT>::Vector(const Vector<T, AllocT> && other) noexcept :
 array(other.array),
 current_offset(other.current_offset),
-allocated_size(other.allocated_size)
+allocated_size(other.allocated_size),
+allocator(other.allocator)
 {
     other.array = nullptr;
     other.current_offset = 0;
@@ -130,7 +142,7 @@ allocated_size(other.allocated_size)
 template<typename T, class AllocT>
 Vector<T, AllocT>::~Vector()
 {
-    delete [] array;
+    allocator.deallocate(array, allocated_size);
     array = nullptr;
     current_offset = 0;
     allocated_size = 0;
@@ -182,14 +194,14 @@ void Vector<T, AllocT>::push_back(const_reference value)
 {
     if (!array)
     {
-        array = new T[1];
+        array = allocator.allocate(1);
         check_array();
         allocated_size = 1;
     }
     else if (current_offset >= allocated_size)
     {
         auto new_size = allocated_size << 1;
-        auto new_array = new T[new_size];
+        auto new_array = allocator.allocate(new_size);
         if (!new_array)
         {
             throw std::bad_alloc();
@@ -198,7 +210,7 @@ void Vector<T, AllocT>::push_back(const_reference value)
         {
             new_array[i] = array[i];
         }
-        delete [] array;
+        allocator.deallocate(array, allocated_size);
         array = new_array;
         allocated_size = new_size;
     }
@@ -263,6 +275,7 @@ template<typename T, class AllocT>
 typename Vector<T, AllocT>::iterator
 Vector<T, AllocT>::begin()
 {
+    decltype(array) ptr = nullptr;
     return iterator(array);
 }
 
@@ -271,6 +284,7 @@ template<typename T, class AllocT>
 typename Vector<T, AllocT>::iterator
 Vector<T, AllocT>::end()
 {
+    decltype(array) ptr = nullptr;
     return iterator(array + current_offset);
 }
 
@@ -290,6 +304,99 @@ Vector<T, AllocT>::rend()
     return reverse_iterator(begin());
 }
 
+
+template<typename T, class AllocT>
+constexpr void Vector<T, AllocT>::reserve(size_type new_cap)
+{
+    if (allocated_size >= new_cap)
+    {
+        return;
+    }
+
+    auto new_array = allocator.allocate(new_cap);
+    if (!new_array)
+    {
+        throw std::bad_alloc();
+    }
+    for (size_type i = 0; i != current_offset; i++)
+    {
+        new_array[i] = array[i];
+    }
+    allocator.deallocate(array, allocated_size);
+    array = new_array;
+    allocated_size = new_cap;
+}
+
+
+template<typename T, class AllocT>
+constexpr void Vector<T, AllocT>::resize(size_type count)
+{
+    if (count <= current_offset)
+    {
+        current_offset = count;
+        for (size_type i = count; i != current_offset; i++)
+        {
+            array[i].~T();
+        }
+        return;
+    }
+
+    if (count > allocated_size)
+    {
+        auto new_array = new T[count];
+        if (!new_array)
+        {
+            throw std::bad_alloc();
+        }
+        for (size_type i = 0; i != current_offset; i++)
+        {
+            new_array[i] = array[i];
+        }
+        delete [] array;
+        array = new_array;
+        allocated_size = count;
+    }
+
+    current_offset = count;
+}
+
+
+template<typename T, class AllocT>
+constexpr void Vector<T, AllocT>::resize(size_type count, const value_type & val)
+{
+    if (count <= current_offset)
+    {
+        current_offset = count;
+        for (size_type i = count; i != current_offset; i++)
+        {
+            array[i].~T();
+        }
+        return;
+    }
+
+    if (count > allocated_size)
+    {
+        auto new_array = new T[count];
+        if (!new_array)
+        {
+            throw std::bad_alloc();
+        }
+        for (size_type i = 0; i != current_offset; i++)
+        {
+            new_array[i] = array[i];
+        }
+        delete [] array;
+        array = new_array;
+        allocated_size = count;
+    }
+
+    for (size_type i = current_offset; i != count; i++)
+    {
+        array[i] = val;
+    }
+
+    current_offset = count;
+}
 
 
 #endif //MSU_CPP_SPRING_2022_MY_VECTOR_H
