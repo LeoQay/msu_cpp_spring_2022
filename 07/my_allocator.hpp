@@ -30,6 +30,7 @@ constexpr T * Allocator<T>::allocate(std::size_t n)
 template<typename T>
 constexpr void Allocator<T>::deallocate(T * p, std::size_t n)
 {
+    if (n == 0) return;
     delete [] p;
 }
 
