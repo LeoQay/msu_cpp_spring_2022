@@ -202,6 +202,34 @@ TEST_F(TestMyVectorIndexAndIter, test_i_8)
 }
 
 
+TEST_F(TestMyVectorIndexAndIter, test_i_9)
+{
+    Vector<int> vector(1000, 10);
+    auto start = vector.begin(), end = vector.end();
+    auto temp = start;
+    temp += 1000;
+    ASSERT_EQ(temp, end);
+    temp = end;
+    temp -= 1000;
+    ASSERT_EQ(start, temp);
+    ASSERT_EQ(end - start, 1000);
+}
+
+
+TEST_F(TestMyVectorIndexAndIter, test_i_10)
+{
+    Vector<int> vector(1000, 10);
+    auto start = vector.rbegin(), end = vector.rend();
+    auto temp = start;
+    temp += 1000;
+    ASSERT_EQ(temp, end);
+    temp = end;
+    temp -= 1000;
+    ASSERT_EQ(start, temp);
+    ASSERT_EQ(end - start, 1000);
+}
+
+
 TEST_F(TestMyVectorDynamic, test_d_1)
 {
     Vector<int> vector;
@@ -332,6 +360,24 @@ TEST_F(TestMyVectorDynamic, test_d_10)
     for (int i = 0; i < 50; i++) ASSERT_EQ(vector[i], 1);
 }
 
+
+TEST_F(TestMyVectorDynamic, test_d_11)
+{
+    Vector<int> vector(50, 1);
+    vector.resize(100, 2);
+    ASSERT_EQ(vector.size(), 100);
+    for (int i = 0; i < 50; i++) ASSERT_EQ(vector[i], 1);
+    for (int i = 50; i < 100; i++) ASSERT_EQ(vector[i], 2);
+}
+
+
+TEST_F(TestMyVectorDynamic, test_d_12)
+{
+    Vector<int> vector(50, 1);
+    vector.resize(25, 4);
+    ASSERT_EQ(vector.size(), 25);
+    for (int i = 0; i < 25; i++) ASSERT_EQ(vector[i], 1);
+}
 
 
 
