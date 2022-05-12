@@ -11,7 +11,7 @@ class TestMyVectorBad : public TestMyVector {};
 
 
 #define expect_error(error_type, smth) \
-try { (smth); }                          \
+try { (smth); }                        \
 catch (error_type & err) { return; }   \
 catch (...) {}                         \
 ASSERT_TRUE(false)
