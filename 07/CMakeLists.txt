@@ -4,12 +4,12 @@ project(hw_cpp_vk)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(07 main.cpp
-        my_vector.cpp my_vector.hpp
+        my_vector.hpp
         my_allocator.hpp
-        my_iterator.hpp my_reverse_iterator.hpp)
+        my_iterator.hpp)
 
 add_executable(test07 test_vector.cpp
-        my_vector.cpp my_vector.hpp
+        my_vector.hpp
         my_allocator.hpp
         my_iterator.hpp)
 

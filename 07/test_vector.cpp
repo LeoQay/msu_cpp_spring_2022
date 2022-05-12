@@ -7,6 +7,14 @@ class TestMyVector : public ::testing::Test {};
 class TestMyVectorBase : public TestMyVector {};
 class TestMyVectorIndexAndIter : public TestMyVector {};
 class TestMyVectorDynamic : public TestMyVector {};
+class TestMyVectorBad : public TestMyVector {};
+
+
+#define expect_error(error_type, smth) \
+try { (smth); }                          \
+catch (error_type & err) { return; }   \
+catch (...) {}                         \
+ASSERT_TRUE(false)
 
 
 TEST_F(TestMyVectorBase, test_base_1)
@@ -84,6 +92,15 @@ TEST_F(TestMyVectorBase, test_base_6)
     s.push_back(1);
     ASSERT_EQ(s.size(), 1);
     ASSERT_NE(v.size(), 1);
+}
+
+
+TEST_F(TestMyVectorBase, test_base_7)
+{
+    Vector<std::string> vector;
+    std::string str = "abcdefg";
+    vector.emplace_back(str, 2, 2);
+    ASSERT_EQ(vector[0], "cd");
 }
 
 
@@ -409,6 +426,46 @@ TEST_F(TestMyVectorDynamic, test_d_14)
     for (int i = 0; i < 1000; i++) vector.push_back(1 + i);
 }
 
+
+TEST_F(TestMyVectorDynamic, test_d_15)
+{
+    Vector<int> vector(100, 3);
+    vector.reserve(1000);
+    for (int i = 0; i < 900; i++) vector.push_back(1 + i);
+}
+
+
+TEST_F(TestMyVectorDynamic, test_d_16)
+{
+    Vector<int> vector(100, 3);
+    vector.reserve(50);
+}
+
+
+TEST_F(TestMyVectorBad, test_bad_1)
+{
+    Vector<int> v(2);
+    expect_error(std::runtime_error, v[2]);
+}
+
+
+template<typename T>
+class BadAlloc
+{
+public:
+    T * allocate(std::size_t n)
+    {
+        return nullptr;
+    }
+
+    void deallocate(T * p, std::size_t n) {}
+};
+
+
+TEST_F(TestMyVectorBad, test_bad_2)
+{
+    expect_error(std::bad_alloc, (Vector<int, BadAlloc<int>>(2)));
+}
 
 
 int main()

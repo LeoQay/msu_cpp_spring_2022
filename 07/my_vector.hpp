@@ -190,7 +190,6 @@ template<typename T, class AllocT>
 typename Vector<T, AllocT>::reference
 Vector<T, AllocT>::operator[] (size_type i)
 {
-    check_array();
     check_index(i);
     return array[i];
 }
@@ -200,7 +199,6 @@ template<typename T, class AllocT>
 typename Vector<T, AllocT>::const_reference
 Vector<T, AllocT>::operator[] (size_type i) const
 {
-    check_array();
     check_index(i);
     return array[i];
 }
@@ -402,7 +400,7 @@ constexpr void Vector<T, AllocT>::resize(size_type count, const value_type & val
 
     if (count > allocated_size)
     {
-        auto new_array = new T[count];
+        auto new_array = allocator.allocate(count);
         if (!new_array)
         {
             throw std::bad_alloc();
