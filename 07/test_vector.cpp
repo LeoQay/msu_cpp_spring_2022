@@ -5,7 +5,8 @@
 
 class TestMyVector : public ::testing::Test {};
 class TestMyVectorBase : public TestMyVector {};
-class TestMyVectorIndexIter : public TestMyVector {};
+class TestMyVectorIndexAndIter : public TestMyVector {};
+class TestMyVectorDynamic : public TestMyVector {};
 
 
 TEST_F(TestMyVectorBase, test_base_1)
@@ -74,14 +75,14 @@ TEST_F(TestMyVectorBase, test_base_5)
 }
 
 
-TEST_F(TestMyVectorIndexIter, test_i_1)
+TEST_F(TestMyVectorIndexAndIter, test_i_1)
 {
     Vector<int> vector;
     ASSERT_EQ(vector.begin(), vector.end());
 }
 
 
-TEST_F(TestMyVectorIndexIter, test_i_2)
+TEST_F(TestMyVectorIndexAndIter, test_i_2)
 {
     Vector<int> vector(1);
     auto it1 = vector.begin();
@@ -92,7 +93,7 @@ TEST_F(TestMyVectorIndexIter, test_i_2)
     ASSERT_EQ(it1, it2);
 }
 
-TEST_F(TestMyVectorIndexIter, test_i_3)
+TEST_F(TestMyVectorIndexAndIter, test_i_3)
 {
     Vector<int> vector(3, 10);
     for (auto it = vector.begin(); it != vector.end(); it++)
@@ -107,7 +108,7 @@ TEST_F(TestMyVectorIndexIter, test_i_3)
 }
 
 
-TEST_F(TestMyVectorIndexIter, test_i_4)
+TEST_F(TestMyVectorIndexAndIter, test_i_4)
 {
     Vector<int> vector(10);
 
@@ -137,7 +138,7 @@ TEST_F(TestMyVectorIndexIter, test_i_4)
 }
 
 
-TEST_F(TestMyVectorIndexIter, test_i_5)
+TEST_F(TestMyVectorIndexAndIter, test_i_5)
 {
     Vector<int> vector(10, 5);
 
@@ -148,7 +149,7 @@ TEST_F(TestMyVectorIndexIter, test_i_5)
 }
 
 
-TEST_F(TestMyVectorIndexIter, test_i_6)
+TEST_F(TestMyVectorIndexAndIter, test_i_6)
 {
     Vector<int> vector(2);
     vector[0] = 3;
@@ -171,11 +172,81 @@ TEST_F(TestMyVectorIndexIter, test_i_6)
 }
 
 
-TEST_F(TestMyVectorIndexIter, test_i_6)
+TEST_F(TestMyVectorIndexAndIter, test_i_7)
 {
+     Vector<int> vector(2, 2);
+     auto it1 = vector.begin();
+     auto it2 = vector.end();
 
+     ASSERT_TRUE(it1 < it2);
+     ASSERT_TRUE(it1 <= it2);
+     ASSERT_TRUE(it1 != it2);
+     ASSERT_FALSE(it1 > it2);
+     ASSERT_FALSE(it1 >= it2);
+     ASSERT_FALSE(it1 == it2);
 }
 
+
+TEST_F(TestMyVectorIndexAndIter, test_i_8)
+{
+    Vector<int> vector(2, 2);
+    auto it1 = vector.rbegin();
+    auto it2 = vector.rend();
+
+    ASSERT_TRUE(it1 < it2);
+    ASSERT_TRUE(it1 <= it2);
+    ASSERT_TRUE(it1 != it2);
+    ASSERT_FALSE(it1 > it2);
+    ASSERT_FALSE(it1 >= it2);
+    ASSERT_FALSE(it1 == it2);
+}
+
+
+TEST_F(TestMyVectorDynamic, test_d_1)
+{
+    Vector<int> vector;
+    vector.push_back(1);
+    ASSERT_EQ(vector.size(), 1);
+    ASSERT_EQ(vector[0], 1);
+}
+
+
+TEST_F(TestMyVectorDynamic, test_d_2)
+{
+    Vector<int> vector(1, 10);
+    vector.push_back(1);
+    ASSERT_EQ(vector.size(), 2);
+    ASSERT_EQ(vector[0], 10);
+    ASSERT_EQ(vector[1], 1);
+}
+
+
+TEST_F(TestMyVectorDynamic, test_d_3)
+{
+    Vector<int> vector(2, 10);
+    vector.push_back(4);
+    ASSERT_EQ(vector.size(), 3);
+    ASSERT_EQ(vector[0], 10);
+    ASSERT_EQ(vector[2], 4);
+    vector.push_back(120);
+    ASSERT_EQ(vector.size(), 4);
+    ASSERT_EQ(vector[0], 10);
+    ASSERT_EQ(vector[1], 10);
+    ASSERT_EQ(vector[2], 4);
+    ASSERT_EQ(vector[3], 120);
+}
+
+
+TEST_F(TestMyVectorDynamic, test_d_4)
+{
+    Vector<int> vector;
+    for (int i = 0; i < 1000; i++)
+    {
+        vector.push_back(i * 2 - 23);
+        ASSERT_EQ(vector.size(), i + 1);
+    }
+    for (int i = 0; i < 1000; i++) ASSERT_EQ(vector[i], i * 2 - 23);
+}
 
 
 int main()
