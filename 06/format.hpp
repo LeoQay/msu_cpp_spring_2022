@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include "processed_format.hpp"
 #include "format_exception.hpp"
