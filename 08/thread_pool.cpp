@@ -33,14 +33,16 @@ void ThreadPool::thread_function(std::deque<SharedTask *> * que_,
     {
         to_check_->acquire();
 
-        SharedTask * task = nullptr;
+        SharedTask * task;
 
         {
             std::lock_guard<std::mutex> guard(*to_que_);
+
             if (que_->empty())
             {
                 return;
             }
+
             task = que_->front();
             que_->pop_front();
         }

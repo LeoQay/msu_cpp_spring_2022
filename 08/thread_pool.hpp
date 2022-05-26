@@ -8,7 +8,6 @@
 #include <deque>
 #include <mutex>
 #include <semaphore>
-#include <iostream>
 
 
 class SharedTask
