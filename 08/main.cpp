@@ -9,12 +9,10 @@
 
 int f(int x, int y)
 {
-    std::cout << "HAHA";
+
     return std::pow(x, y);
 }
 
-
-typedef void (*p_func) ();
 
 
 int main()
@@ -24,7 +22,13 @@ int main()
 
     ThreadPool pool(1);
 
-    pool.exec(f, 1, 2);
+    auto fut = pool.exec(f, 2, 12);
+
+    int sm = fut.get();
+
+
+    std::cout << sm << std::endl;
+
 
     return 0;
 }

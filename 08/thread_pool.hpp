@@ -7,17 +7,15 @@
 #include <vector>
 #include <deque>
 #include <mutex>
-#include <shared_mutex>
+#include <semaphore>
 #include <iostream>
 
 
 class SharedTask
 {
 public:
-    virtual void operator() ()
-    {
-        std::cout << "Blin" <<std::endl;
-    }
+    virtual void operator() () = 0;
+    virtual ~SharedTask() = default;
 };
 
 
@@ -45,13 +43,17 @@ public:
     // pass arguments by value
     template <class Func, class... ArgsT>
     auto exec(Func func, ArgsT ...args) -> std::future<decltype(func(args...))>;
-private:
 
-public:
-    static void thread_function(std::deque<SharedTask *> * ptr);
+private:
+    static void thread_function(std::deque<SharedTask *> * que_,
+                                std::counting_semaphore<> * to_check_,
+                                std::mutex * to_que_);
 
     std::vector<std::thread> threads;
+    std::counting_semaphore<> to_check;
+
     std::deque<SharedTask *> que;
+    std::mutex to_que;
 };
 
 
@@ -65,6 +67,8 @@ auto ThreadPool::exec(Func func, ArgsT ...args) -> std::future<decltype(func(arg
     auto real_task = new RealTask<decltype(task)>(std::move(task));
 
     que.push_back(static_cast<SharedTask *>(real_task));
+
+    to_check.release();
 
     return result;
 }
