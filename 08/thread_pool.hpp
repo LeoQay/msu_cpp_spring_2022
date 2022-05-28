@@ -10,16 +10,16 @@
 #include <semaphore>
 
 
-class SharedTask
+class BaseTask
 {
 public:
     virtual void operator() () = 0;
-    virtual ~SharedTask() = default;
+    virtual ~BaseTask() = default;
 };
 
 
 template<class T>
-class RealTask : public SharedTask
+class RealTask : public BaseTask
 {
 public:
     explicit RealTask(T obj) : real_task(std::move(obj)) {}
@@ -44,14 +44,14 @@ public:
     auto exec(Func func, ArgsT ...args) -> std::future<decltype(func(args...))>;
 
 private:
-    static void thread_function(std::deque<SharedTask *> * que_,
+    static void thread_function(std::deque<BaseTask *> * que_,
                                 std::counting_semaphore<> * to_check_,
                                 std::mutex * to_que_);
 
     std::vector<std::thread> threads;
     std::counting_semaphore<> to_check;
 
-    std::deque<SharedTask *> que;
+    std::deque<BaseTask *> que;
     std::mutex to_que;
 };
 
@@ -65,7 +65,10 @@ auto ThreadPool::exec(Func func, ArgsT ...args) -> std::future<decltype(func(arg
 
     auto real_task = new RealTask<decltype(task)>(std::move(task));
 
-    que.push_back(static_cast<SharedTask *>(real_task));
+    {
+        std::lock_guard<std::mutex> lock(to_que);
+        que.push_back(static_cast<BaseTask *>(real_task));
+    }
 
     to_check.release();
 

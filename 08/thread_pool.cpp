@@ -25,7 +25,7 @@ ThreadPool::~ThreadPool()
 }
 
 
-void ThreadPool::thread_function(std::deque<SharedTask *> * que_,
+void ThreadPool::thread_function(std::deque<BaseTask *> * que_,
                                  std::counting_semaphore<> * to_check_,
                                  std::mutex * to_que_)
 {
@@ -33,7 +33,7 @@ void ThreadPool::thread_function(std::deque<SharedTask *> * que_,
     {
         to_check_->acquire();
 
-        SharedTask * task;
+        BaseTask * task;
 
         {
             std::lock_guard<std::mutex> guard(*to_que_);
