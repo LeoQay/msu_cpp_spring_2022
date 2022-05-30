@@ -60,6 +60,33 @@ void TwoThreadSort::thread_function(TwoThreadSort * self)
 
     // second phase
 
+    size_t arr_size = memory_allowed / 4;
+    size_t merged_size = memory_allowed / 2;
 
+    auto first_arr = arr + merged_size;
+    auto second_arr = first_arr + arr_size;
+    auto merged_arr = arr;
+
+    while (true)
+    {
+        FILE * first = nullptr;
+        FILE * second = nullptr;
+        size_t cur_first_size = 0;
+        size_t cur_second_size = 0;
+
+        {
+            std::lock_guard<std::mutex> lock(self->to_temp_files_);
+            if (self->temp_files_.size() <= 1) break;
+            first = self->temp_files_.front();
+            self->temp_files_.pop_front();
+            second = self->temp_files_.front();
+            self->temp_files_.pop_front();
+        }
+
+        rewind(first);
+        rewind(second);
+
+
+    }
 }
 
