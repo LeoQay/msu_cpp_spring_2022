@@ -29,8 +29,8 @@ private:
     FILE * first_file = nullptr;
     std::mutex first_file_mut;
 
-    std::mutex to_temp_files_[2];
-    std::deque<FILE *> temp_files_[2];
+    std::mutex to_temp_files_;
+    std::deque<FILE *> temp_files_;
 
     std::deque<std::thread> threads;
 

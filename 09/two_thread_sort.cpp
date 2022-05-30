@@ -29,17 +29,23 @@ void TwoThreadSort::thread_function(TwoThreadSort * self)
     // first phase
     auto arr = new int64_t[memory_allowed];
 
-    while (self->phase == 1)
+    while (true)
     {
         size_t read_len = 0;
         {
             std::lock_guard<std::mutex> lock(self->first_file_mut);
+
+            if (self->phase != 1) break;
+
             read_len = fread(arr, sizeof *arr, memory_allowed, self->first_file);
-        }
-        if (read_len == 0)
-        {
-            self->phase = 2;
-            break;
+
+            if (read_len == 0)
+            {
+                self->phase = 2;
+                fclose(self->first_file);
+                self->first_file = nullptr;
+                break;
+            }
         }
 
         std::sort(arr, arr + read_len);
@@ -47,8 +53,8 @@ void TwoThreadSort::thread_function(TwoThreadSort * self)
         fwrite(arr, sizeof *arr, read_len, temp);
 
         {
-            std::lock_guard<std::mutex> lock(self->to_temp_files_[0]);
-            self->temp_files_[0].push_back(temp);
+            std::lock_guard<std::mutex> lock(self->to_temp_files_);
+            self->temp_files_.push_back(temp);
         }
     }
 
