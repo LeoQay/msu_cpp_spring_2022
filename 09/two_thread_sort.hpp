@@ -22,12 +22,19 @@ class TwoThreadSort
 public:
     void sort(const std::string & file_name);
 private:
-    friend void thread_function(TwoThreadSort & self);
+    static void thread_function(TwoThreadSort * self);
+
+    int phase = 0;
+
+    FILE * first_file = nullptr;
+    std::mutex first_file_mut;
 
     std::mutex to_temp_files_[2];
-    std::deque<int> temp_files_[2];
+    std::deque<FILE *> temp_files_[2];
 
-    static constexpr std::size_t memory_allowed = degree(2, 24);
+    std::deque<std::thread> threads;
+
+    static constexpr std::size_t memory_allowed = 3 * degree(2, 23);
 };
 
 
