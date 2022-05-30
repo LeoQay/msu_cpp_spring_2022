@@ -71,8 +71,6 @@ void TwoThreadSort::thread_function(TwoThreadSort * self)
     {
         FILE * first = nullptr;
         FILE * second = nullptr;
-        size_t cur_first_size = 0;
-        size_t cur_second_size = 0;
 
         {
             std::lock_guard<std::mutex> lock(self->to_temp_files_);
@@ -86,7 +84,25 @@ void TwoThreadSort::thread_function(TwoThreadSort * self)
         rewind(first);
         rewind(second);
 
+        size_t merged_ptr = 0;
+        size_t cur_first_size = 0, first_ptr = 0;
+        size_t cur_second_size = 0, second_ptr = 0;
 
+        while (true)
+        {
+            if (first_ptr >= cur_first_size)
+            {
+                cur_first_size = fread(first_arr, sizeof *first_arr, arr_size, first);
+                first_ptr = 0;
+            }
+            if (second_ptr >= cur_second_size)
+            {
+                cur_second_size = fread(second_arr, sizeof *second_arr, arr_size, second);
+                second_ptr = 0;
+            }
+
+
+        }
     }
 }
 
