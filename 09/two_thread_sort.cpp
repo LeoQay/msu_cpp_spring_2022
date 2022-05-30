@@ -85,8 +85,10 @@ void TwoThreadSort::thread_function(TwoThreadSort * self)
         rewind(second);
 
         size_t merged_ptr = 0;
-        size_t cur_first_size = 0, first_ptr = 0;
-        size_t cur_second_size = 0, second_ptr = 0;
+        size_t cur_first_size = 1, first_ptr = 1;
+        size_t cur_second_size = 1, second_ptr = 1;
+
+        FILE * result = tmpfile64();
 
         while (true)
         {
@@ -95,14 +97,55 @@ void TwoThreadSort::thread_function(TwoThreadSort * self)
                 cur_first_size = fread(first_arr, sizeof *first_arr, arr_size, first);
                 first_ptr = 0;
             }
+
             if (second_ptr >= cur_second_size)
             {
                 cur_second_size = fread(second_arr, sizeof *second_arr, arr_size, second);
                 second_ptr = 0;
             }
 
+            if (merged_ptr >= merged_size)
+            {
+                fwrite(merged_arr, sizeof *merged_arr, merged_ptr, result);
+                merged_ptr = 0;
+            }
 
+            if (cur_first_size == 0 || cur_second_size == 0) break;
+
+            if (first_arr[first_ptr] < second_arr[second_ptr])
+            {
+                merged_arr[merged_ptr++] = first_arr[first_ptr];
+                ++first_ptr;
+            }
+            else
+            {
+                merged_arr[merged_ptr++] = second_arr[second_ptr];
+                ++second_ptr;
+            }
         }
+
+        if (cur_second_size > 0)
+        {
+            fwrite(second_arr, sizeof *second_arr, cur_second_size, result);
+            std::swap(first, second);
+        }
+        else
+        {
+            fwrite(first_arr, sizeof *first_arr, cur_first_size, result);
+        }
+
+        while (!feof(first))
+        {
+            cur_first_size = fread(merged_arr, sizeof *merged_arr, merged_size, first);
+            fwrite(merged_arr, sizeof *merged_arr, cur_first_size, result);
+        }
+
+        {
+            std::lock_guard<std::mutex> lock(self->to_temp_files_);
+            self->temp_files_.push_back(result);
+        }
+
+        fclose(first);
+        fclose(second);
     }
 }
-
