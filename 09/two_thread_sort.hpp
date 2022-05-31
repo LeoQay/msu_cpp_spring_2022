@@ -20,7 +20,7 @@ constexpr std::size_t degree(size_t val, int deg)
 class TwoThreadSort
 {
 public:
-    void sort(const std::string & file_name);
+    FILE * sort(const std::string & file_name);
 private:
     static void thread_function(TwoThreadSort * self);
 

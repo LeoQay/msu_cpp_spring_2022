@@ -7,10 +7,10 @@
 #include "two_thread_sort.hpp"
 
 
-void TwoThreadSort::sort(const std::string & file_name)
+FILE * TwoThreadSort::sort(const std::string & file_name)
 {
     phase = 1;
-    first_file = fopen64(file_name.c_str(), "r");
+    first_file = fopen64(file_name.c_str(), "rb");
 
     for (int i = 0; i < 2; i++)
     {
@@ -21,6 +21,8 @@ void TwoThreadSort::sort(const std::string & file_name)
     {
         threads[i].join();
     }
+
+    return temp_files_[0];
 }
 
 
@@ -32,6 +34,7 @@ void TwoThreadSort::thread_function(TwoThreadSort * self)
     while (true)
     {
         size_t read_len = 0;
+
         {
             std::lock_guard<std::mutex> lock(self->first_file_mut);
 
