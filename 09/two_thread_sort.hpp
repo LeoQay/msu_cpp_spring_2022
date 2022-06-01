@@ -3,7 +3,7 @@
 
 
 #include <thread>
-#include <deque>
+#include <vector>
 #include <mutex>
 #include <cmath>
 
@@ -20,15 +20,15 @@ constexpr std::size_t degree(size_t val, int deg)
 class TwoThreadSort
 {
 public:
+    ~TwoThreadSort();
     void sort(const std::string & inp, const std::string & out);
 private:
     static void thread_function(TwoThreadSort * self);
 
-    std::deque<std::thread> threads;
+    std::vector<std::thread> threads;
 
-
-
-    static constexpr std::size_t memory_allowed = 7 * degree(2, 23);
+    int64_t * arr_ = nullptr;
+    static constexpr std::size_t memory_allowed = 7 * degree(2, 23) / sizeof(int64_t);
 };
 
 

@@ -7,10 +7,9 @@ int main()
 {
 
     TwoThreadSort sorter;
-    FILE * file = sorter.sort("file.bin");
+    sorter.sort("file.bin", "result.bin");
 
-    rewind(file);
-
+    FILE * file = fopen64("result.bin", "r");
 
     int64_t buffer[1024];
 
@@ -22,6 +21,7 @@ int main()
             printf("%ld\n", buffer[i]);
         }
     }
+
 
     return 0;
 }

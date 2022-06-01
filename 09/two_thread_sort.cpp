@@ -5,6 +5,13 @@
 #include <algorithm>
 
 #include "two_thread_sort.hpp"
+#include "merge_sort.hpp"
+
+
+TwoThreadSort::~TwoThreadSort()
+{
+    delete [] arr_;
+}
 
 
 void TwoThreadSort::sort(const std::string & inp, const std::string & out)
