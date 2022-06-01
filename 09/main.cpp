@@ -5,10 +5,10 @@
 
 int main()
 {
-/*
+
     TwoThreadSort sorter;
     sorter.sort("file.bin", "result.bin");
-*/
+
     FILE * file = fopen("result.bin", "rb");
 
     int64_t buffer[10000];

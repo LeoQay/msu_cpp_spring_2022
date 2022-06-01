@@ -10,7 +10,7 @@ MergeSort::MergeSort(intT * arr, size_t size) : arr_(arr), size_(size) {}
 
 void MergeSort::sort(FILE * to_sort)
 {
-    fseek(to_sort, 0, SEEK_END);
+    fseeko64(to_sort, 0, SEEK_END);
     size_t size = std::ftell(to_sort) / sizeof(int64_t);
     std::rewind(to_sort);
 
@@ -19,8 +19,7 @@ void MergeSort::sort(FILE * to_sort)
     {
         size_t len = std::fread(arr_, sizeof(intT), size_, to_sort);
         std::sort(arr_, arr_ + len);
-
-        fseek(to_sort, 0, SEEK_SET);
+        std::rewind(to_sort);
         std::fwrite(arr_, sizeof(intT), len, to_sort);
         return;
     }
