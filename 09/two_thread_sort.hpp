@@ -20,21 +20,15 @@ constexpr std::size_t degree(size_t val, int deg)
 class TwoThreadSort
 {
 public:
-    FILE * sort(const std::string & file_name);
+    void sort(const std::string & inp, const std::string & out);
 private:
     static void thread_function(TwoThreadSort * self);
 
-    int phase = 0;
-
-    FILE * first_file = nullptr;
-    std::mutex first_file_mut;
-
-    std::mutex to_temp_files_;
-    std::deque<FILE *> temp_files_;
-
     std::deque<std::thread> threads;
 
-    static constexpr std::size_t memory_allowed = 3 * degree(2, 23);
+
+
+    static constexpr std::size_t memory_allowed = 7 * degree(2, 23);
 };
 
 
