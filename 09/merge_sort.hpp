@@ -5,7 +5,9 @@
 #include <cstdio>
 
 
-template<typename intT>
+using intT = int64_t;
+
+
 class MergeSort
 {
 public:

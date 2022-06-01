@@ -20,7 +20,7 @@ void TwoThreadSort::sort(const std::string & inp, const std::string & out)
 
     if (!arr_) arr_ = new int64_t[memory_allowed];
 
-    MergeSort<int64_t> sorter(arr_, memory_allowed);
+    MergeSort sorter(arr_, memory_allowed);
 
     sorter.sort(inp_file);
 

@@ -13,7 +13,7 @@ constexpr std::size_t degree(size_t val, int deg)
 {
     std::size_t res = 1;
     for (int i = 0; i < deg; i++) res *= val;
-    return val;
+    return res;
 }
 
 

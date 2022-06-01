@@ -3,22 +3,22 @@
 #include "merge_sort.hpp"
 
 
-template<typename intT>
-MergeSort<intT>::MergeSort(intT * arr, size_t size) : arr_(arr), size_(size) {}
+
+MergeSort::MergeSort(intT * arr, size_t size) : arr_(arr), size_(size) {}
 
 
-template<typename intT>
-void MergeSort<intT>::sort(FILE * to_sort)
+void MergeSort::sort(FILE * to_sort)
 {
+    fseeko64(to_sort, 0, SEEK_END);
+    size_t size = std::ftell(to_sort) / sizeof(int64_t);
     std::rewind(to_sort);
 
-    size_t size = fseeko64(to_sort, 0, SEEK_END);
     if (size == 0) return;
     if (size <= size_)
     {
         size_t len = std::fread(arr_, sizeof(intT), size_, to_sort);
         std::sort(arr_, arr_ + len);
-        fseeko64(to_sort, 0, SEEK_SET);
+        std::rewind(to_sort);
         std::fwrite(arr_, sizeof(intT), len, to_sort);
         return;
     }
@@ -31,7 +31,9 @@ void MergeSort<intT>::sort(FILE * to_sort)
     sort(temp1);
     sort(temp2);
 
-    fseeko64(to_sort, 0, SEEK_SET);
+    std::rewind(to_sort);
+    std::rewind(temp1);
+    std::rewind(temp2);
     merge(to_sort, temp1, temp2);
 
     std::fclose(temp1);
@@ -39,8 +41,7 @@ void MergeSort<intT>::sort(FILE * to_sort)
 }
 
 
-template<typename intT>
-int MergeSort<intT>::split(FILE * to_split, FILE * out1, FILE * out2)
+int MergeSort::split(FILE * to_split, FILE * out1, FILE * out2)
 {
     // update feof
     std::fread(arr_, sizeof(intT), 0, to_split);
@@ -64,11 +65,11 @@ int MergeSort<intT>::split(FILE * to_split, FILE * out1, FILE * out2)
 }
 
 
-template<typename intT>
-void MergeSort<intT>::merge(FILE * to_merge, FILE * in1, FILE * in2)
+
+void MergeSort::merge(FILE * to_merge, FILE * in1, FILE * in2)
 {
-    size_t size = size_ / 4, pos1 = 0, pos2 = 0, len1, len2;
-    size_t buf_size = size / 2, buf_pos = 0;
+    size_t size = size_ / 4, pos1 = 0, pos2 = 0, len1 = 0, len2 = 0;
+    size_t buf_size = size_ / 2, buf_pos = 0;
     auto arr1 = arr_, arr2 = arr_ + size, buf = arr_ + 2 * size;
 
     // update feof

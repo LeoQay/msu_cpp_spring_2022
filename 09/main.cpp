@@ -9,7 +9,7 @@ int main()
     TwoThreadSort sorter;
     sorter.sort("file.bin", "result.bin");
 
-    FILE * file = fopen64("result.bin", "r");
+    FILE * file = fopen64("file.bin", "rb");
 
     int64_t buffer[1024];
 
