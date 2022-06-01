@@ -23,7 +23,7 @@ public:
     ~TwoThreadSort();
     void sort(const std::string & inp, const std::string & out);
 private:
-    static void thread_function(TwoThreadSort * self);
+    static void thread_function(FILE * file, int64_t * arr);
 
     std::vector<std::thread> threads;
 

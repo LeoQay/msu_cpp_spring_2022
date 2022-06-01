@@ -45,6 +45,9 @@ void MergeSort::sort(FILE * to_sort)
 int MergeSort::split(FILE * to_split, FILE * out1, FILE * out2)
 {
     // update feof
+    std::rewind(to_split);
+    std::rewind(out1);
+    std::rewind(out2);
     std::fread(arr_, sizeof(intT), 0, to_split);
 
     int flag = 0;
@@ -69,6 +72,10 @@ int MergeSort::split(FILE * to_split, FILE * out1, FILE * out2)
 
 void MergeSort::merge(FILE * to_merge, FILE * in1, FILE * in2)
 {
+    std::rewind(to_merge);
+    std::rewind(in1);
+    std::rewind(in2);
+
     size_t size = size_ / 4, pos1 = 0, pos2 = 0, len1 = 0, len2 = 0;
     size_t buf_size = size_ / 2, buf_pos = 0;
     auto arr1 = arr_, arr2 = arr_ + size, buf = arr_ + 2 * size;
@@ -81,7 +88,7 @@ void MergeSort::merge(FILE * to_merge, FILE * in1, FILE * in2)
     {
         if (buf_pos >= buf_size)
         {
-            std::fwrite(buf, sizeof(intT), buf_size, to_merge);
+            std::fwrite(buf, sizeof(intT), buf_pos, to_merge);
             buf_pos = 0;
         }
 
