@@ -5,20 +5,20 @@
 
 int main()
 {
-
+/*
     TwoThreadSort sorter;
     sorter.sort("file.bin", "result.bin");
+*/
+    FILE * file = fopen("result.bin", "rb");
 
-    FILE * file = fopen64("file.bin", "rb");
-
-    int64_t buffer[1024];
+    int64_t buffer[10000];
 
     while (!feof(file))
     {
-        auto size = fread(buffer, sizeof *buffer, 1024, file);
-        for (size_t i = 0; i < size; i++)
+        auto size = fread(buffer, sizeof *buffer, 10000, file);
+        for (size_t i = 0; i < size - 1; i++)
         {
-            printf("%ld\n", buffer[i]);
+            if (buffer[i] > buffer[i + 1]) printf("Blin\n");
         }
     }
 

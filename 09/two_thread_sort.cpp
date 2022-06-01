@@ -1,4 +1,5 @@
 #include <thread>
+#include <filesystem>
 #include <mutex>
 #include <deque>
 #include <cstdio>
@@ -16,16 +17,16 @@ TwoThreadSort::~TwoThreadSort()
 
 void TwoThreadSort::sort(const std::string & inp, const std::string & out)
 {
-    FILE * inp_file = fopen64(inp.c_str(), "rb");
+    std::filesystem::copy_file(inp, out);
 
     if (!arr_) arr_ = new int64_t[memory_allowed];
 
+    FILE * out_file = fopen64(out.c_str(), "rb+");
+
     MergeSort sorter(arr_, memory_allowed);
+    sorter.sort(out_file);
 
-    sorter.sort(inp_file);
-
-    fclose(inp_file);
-
+    fclose(out_file);
     return;
 
     for (int i = 0; i < 2; i++)
