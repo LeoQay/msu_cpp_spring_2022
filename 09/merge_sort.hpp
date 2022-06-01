@@ -9,8 +9,7 @@ template<typename intT>
 class MergeSort
 {
 public:
-    MergeSort();
-    void set_buffer(intT * arr, size_t size);
+    MergeSort(intT * arr, size_t size);
     int split(FILE * to_split, FILE * out1, FILE * out2);
     void merge(FILE * out, FILE * in1, FILE * in2);
     void sort(FILE * to_sort);

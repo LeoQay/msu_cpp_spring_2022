@@ -4,15 +4,7 @@
 
 
 template<typename intT>
-MergeSort<intT>::MergeSort() : arr_(nullptr), size_(0) {}
-
-
-template<typename intT>
-void MergeSort<intT>::set_buffer(intT * arr, size_t size)
-{
-    arr_ = arr;
-    size_ = size;
-}
+MergeSort<intT>::MergeSort(intT * arr, size_t size) : arr_(arr), size_(size) {}
 
 
 template<typename intT>

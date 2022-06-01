@@ -3,7 +3,9 @@ project(hw_cpp_vk)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(09 main.cpp two_thread_sort.hpp two_thread_sort.cpp merge_sort.cpp merge_sort.hpp)
+add_executable(09 main.cpp
+        two_thread_sort.hpp two_thread_sort.cpp
+        merge_sort.cpp merge_sort.hpp)
 
 add_executable(test09 test_sort.cpp)
 
