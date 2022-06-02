@@ -5,8 +5,8 @@ TEST_NAME=test_sort
 TEST_SRC=$(TEST_NAME).cpp
 TEST_HDR=$(TEST_NAME).hpp
 TEST_FILES=$(TEST_SRC) $(TEST_HDR)
-PROJECT_SRC=thread_sort.cpp merge_sort.cpp
-PROJECT_HDR=thread_sort.hpp merge_sort.hpp
+PROJECT_SRC=two_thread_sort.cpp merge_sort.cpp
+PROJECT_HDR=two_thread_sort.hpp merge_sort.hpp
 PROJECT_FILES=$(PROJECT_SRC) $(PROJECT_HDR)
 
 .PHONY: test clean
