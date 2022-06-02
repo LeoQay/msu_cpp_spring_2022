@@ -1,6 +1,5 @@
 #include <cstdlib>
 #include <cstdio>
-#include <random>
 
 
 int main()
@@ -16,7 +15,6 @@ int main()
         if (i % 1024 == 1023)
         {
             fwrite(buffer, sizeof (int64_t), 1024, file);
-            printf("%ld\n", i / 1024);
         }
     }
 

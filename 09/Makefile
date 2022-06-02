@@ -1,17 +1,19 @@
 CC=g++
 FLAGS=-std=c++20 -Wall -pedantic -Wextra -Werror
 TEST_LIBS=-lgtest_main -lgtest -lpthread
-TEST_NAME=test_thread_pool
+TEST_NAME=test_sort
 TEST_SRC=$(TEST_NAME).cpp
-PROJECT_SRC=thread_pool.cpp
-PROJECT_HDR=thread_pool.hpp
+TEST_HDR=$(TEST_NAME).hpp
+TEST_FILES=$(TEST_SRC) $(TEST_HDR)
+PROJECT_SRC=thread_sort.cpp merge_sort.cpp
+PROJECT_HDR=thread_sort.hpp merge_sort.hpp
 PROJECT_FILES=$(PROJECT_SRC) $(PROJECT_HDR)
 
 .PHONY: test clean
 
 all: make_test
 
-make_test: $(TEST_SRC) $(PROJECT_FILES)
+make_test: $(TEST_FILES) $(PROJECT_FILES)
 	$(CC) $(FLAGS) $(TEST_SRC) $(PROJECT_SRC) -o $(TEST_NAME) $(TEST_LIBS)
 
 test:
