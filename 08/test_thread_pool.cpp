@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <iostream>
 
 #include "thread_pool.hpp"
 #include "for_tests.hpp"
