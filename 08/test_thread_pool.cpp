@@ -77,7 +77,7 @@ TEST_F(TestThreadPool, test_6)
 {
     ThreadPool pool(8);
 
-    auto fut = pool.exec(timed_function);
+    auto fut = pool.exec(timed_function, 1000);
 
     auto res_time = fut.get();
 
@@ -89,16 +89,17 @@ TEST_F(TestThreadPool, test_7)
 {
     ThreadPool pool(8);
     std::vector<std::future<uint64_t>> v;
+    std::vector<uint64_t> tim = {1000, 20, 100, 500, 400, 250, 120, 450};
 
     for (int i = 0; i < 8; i++)
     {
-        v.push_back(pool.exec(timed_function));
+        v.push_back(pool.exec(timed_function, tim[i]));
     }
 
     for (int i = 0; i < 8; i++)
     {
         auto res_time = v[i].get();
-        ASSERT_LE(res_time, 1001000000);
+        ASSERT_LE(res_time - tim[i] * 1000000, 1000000);
     }
 }
 

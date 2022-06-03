@@ -26,11 +26,11 @@ std::string func_str_mul_int(std::string arg, int count)
 }
 
 
-uint64_t timed_function()
+uint64_t timed_function(uint64_t t)
 {
     auto start = std::chrono::high_resolution_clock::now();
 
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(t));
 
     auto end = std::chrono::high_resolution_clock::now();
 
