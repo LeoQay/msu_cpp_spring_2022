@@ -7,7 +7,7 @@
 
 
 ThreadPool::ThreadPool(size_t poolSize)
-: threads(), que(), to_check(0), to_que()
+: threads(), to_check(0), que(), to_que()
 {
     for (size_t i = 0; i < poolSize; i++)
     {

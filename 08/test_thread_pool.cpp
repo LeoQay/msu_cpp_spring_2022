@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <iostream>
 
 #include "thread_pool.hpp"
 #include "for_tests.hpp"
@@ -68,6 +69,36 @@ TEST_F(TestThreadPool, test_5)
     for (int i = 0; i < 100; i++)
     {
         ASSERT_EQ(v[i].get().size(), i);
+    }
+}
+
+
+TEST_F(TestThreadPool, test_6)
+{
+    ThreadPool pool(8);
+
+    auto fut = pool.exec(timed_function);
+
+    auto res_time = fut.get();
+
+    ASSERT_LE(res_time, 1001000000);
+}
+
+
+TEST_F(TestThreadPool, test_7)
+{
+    ThreadPool pool(8);
+    std::vector<std::future<uint64_t>> v;
+
+    for (int i = 0; i < 8; i++)
+    {
+        v.push_back(pool.exec(timed_function));
+    }
+
+    for (int i = 0; i < 8; i++)
+    {
+        auto res_time = v[i].get();
+        ASSERT_LE(res_time, 1001000000);
     }
 }
 

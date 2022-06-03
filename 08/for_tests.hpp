@@ -1,7 +1,9 @@
 #ifndef HW_CPP_VK_FOR_TESTS_HPP
 #define HW_CPP_VK_FOR_TESTS_HPP
 
+#include <thread>
 #include <cmath>
+#include <ctime>
 
 
 int func_1841()
@@ -22,6 +24,19 @@ std::string func_str_mul_int(std::string arg, int count)
     for (int i = 0; i < count; i++) res += arg;
     return res;
 }
+
+
+uint64_t timed_function()
+{
+    auto start = std::chrono::high_resolution_clock::now();
+
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+
+    auto end = std::chrono::high_resolution_clock::now();
+
+    return (end - start).count();
+}
+
 
 
 
